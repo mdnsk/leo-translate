@@ -19,7 +19,7 @@
       chrome.runtime.onMessage.addListener(this.onMessageListener);
 
       // The component was created after the context-menu-clicked event had been fired,
-      // So it need to request this data again.
+      // So it needs to request this data again.
       chrome.runtime.sendMessage({ id: 'vue-context-popup-created' })
           .then(response => this.onMessageListener(response));
     },
