@@ -40,6 +40,10 @@
     created () {
       chrome.storage.onChanged.addListener(this.changeHistoryListener);
       this.loadHistory();
+
+      setTimeout(() => {
+        document.querySelector('.browser-action__search').focus();
+      }, 150);
     },
 
     beforeDestroy () {
