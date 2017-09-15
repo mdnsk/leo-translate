@@ -16,7 +16,7 @@
         </div>
       </div>
       <ul class="translate__list">
-        <li class="translate__item" v-for="trans in translations" @click.prevent="addToDictionary(trans.value)">
+        <li class="translate__item" v-for="trans in translations" @click.prevent="addToDictionary(trans.value)" title="Add this meaning to the dictionary.">
           {{ trans.value }}
         </li>
       </ul>
