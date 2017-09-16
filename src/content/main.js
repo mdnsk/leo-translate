@@ -1,10 +1,18 @@
 import { iframeResizer } from 'iframe-resizer';
 
+const iframeId = 'leoTranslateIFrame';
+
 let mouseX = 0;
 let mouseY = 0;
 
 document.body.addEventListener('mousedown', e => {
-  if (e.button === 2) {
+  if (e.button === 0) {
+    const container = document.getElementById(iframeId);
+
+    if (container !== null) {
+      container.style.display = 'none';
+    }
+  } else if (e.button === 2) {
     mouseX = e.pageX;
     mouseY = e.pageY;
   }
@@ -23,7 +31,6 @@ chrome.runtime.onMessage.addListener(message => {
 });
 
 function getIframe () {
-  const iframeId = 'leoTranslateIFrame';
   let container = document.getElementById(iframeId);
 
   if (container === null) {
