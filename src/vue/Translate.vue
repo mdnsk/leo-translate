@@ -8,6 +8,9 @@
     <div v-if="loading" class="translate__loading">
       Loading...
     </div>
+    <div v-else-if="errorMessage !== ''" class="translate__error">
+      {{ errorMessage }}
+    </div>
     <div v-else class="translate__body">
       <div class="translate__meta">
         <div v-if="transcription" class="translate__transcription">[{{ transcription }}]</div>
@@ -17,6 +20,7 @@
       </div>
       <ul class="translate__list">
         <li class="translate__item" v-for="trans in translations" @click.prevent="addToDictionary(trans.value)" title="Add this meaning to the dictionary.">
+          <div class="translate__rating" :style="{width: trans.rating+'%'}"></div>
           {{ trans.value }}
         </li>
       </ul>
@@ -52,7 +56,8 @@
         transcription: '',
         translations: [],
         wordForms: [],
-        soundUrl: ''
+        soundUrl: '',
+        errorMessage: ''
       };
     },
 
@@ -82,21 +87,47 @@
         this.loading = true;
         api.getTranslations(this.text).then(data => {
           if (data.error_msg === '') {
-            this.translations = data.translate;
+            this.translations = this.calcRating(data.translate);
             this.soundUrl = data.sound_url;
             this.transcription = data.transcription;
             this.wordForms = data.word_forms;
+            this.errorMessage = '';
           } else {
             this.translations = [];
             this.soundUrl = '';
             this.transcription = '';
             this.wordForms = [];
+            this.errorMessage = data.error_msg;
           }
           this.loading = false;
         }).catch(error => {
           this.laoding = false;
           console.error(error);
         });
+      },
+
+      calcRating (translations) {
+        let max = 0;
+        let min = 0;
+
+        translations.forEach(item => {
+            if (item.votes > max) {
+              max = item.votes;
+            }
+            if (item.votes < min || min === 0) {
+              min = item.votes;
+            }
+          });
+
+        return translations.map(item => {
+            if (max === 0 && min === 0 || min >= max) {
+              item.rating = 0;
+            } else {
+              item.rating = 100 / (max - min) * (item.votes - min);
+            }
+
+            return item;
+          });
       },
 
       play () {
@@ -145,8 +176,8 @@
     border-bottom: 1px dotted;
   }
 
-  .translate__list, .translate__loading {
-    padding: 10px 0 0;
+  .translate__list, .translate__loading, .translate__error {
+    padding: 10px 0;
     margin: 0;
   }
 
@@ -156,7 +187,21 @@
     padding: 2px 5px;
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
+    position: relative;
     cursor: pointer;
+  }
+
+  .translate__rating {
+    width: 0;
+    height: 2px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+    background-color: #30e60b;
+  }
+
+  .translate__list:hover .translate__rating {
+    display: none;
   }
 
   .translate__btn {
