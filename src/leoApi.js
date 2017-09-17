@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const config = {
   api: 'https://api.lingualeo.com',
   url: 'https://lingualeo.com',
@@ -14,6 +12,8 @@ const config = {
 
 function prepareParams (paramsObj) {
   const params = new URLSearchParams();
+
+  params.append('port', 1001);
 
   for (const param in paramsObj) {
     params.append(param, paramsObj[param]);
@@ -34,15 +34,24 @@ export default {
    * @returns {Promise}
    */
   addWordToDictionary (word, translation, pageUrl, pageTitle, context = '') {
-    return axios.post(config.api+config.addWordToDictionary+'?port=1001', prepareParams({
-        word,
-        context,
-        port: 1001,
-        tword: translation,
-        context_url: pageUrl,
-        context_title: pageTitle
-      }))
-      .then(response => response.data);
+    const body = prepareParams({
+      word,
+      context,
+      tword: translation,
+      context_url: pageUrl,
+      context_title: pageTitle
+    });
+
+    return fetch(config.api+config.addWordToDictionary+'?port=1001', {
+        body,
+        method: 'POST',
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+      });
   },
 
   /**
@@ -52,13 +61,21 @@ export default {
    * @returns {Promise}
    */
   getTranslations (word) {
-    return axios.post(config.api+config.getTranslations+'?port=1001', prepareParams({
-        word,
-        port: 1001,
-        include_media: 1,
-        app_word_forms: 1
-      }))
-      .then(response => response.data);
+    const body = prepareParams({
+      word,
+      include_media: 1,
+      app_word_forms: 1
+    });
+
+    return fetch(config.api+config.getTranslations+'?port=1001', {
+        body,
+        method: 'POST'
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+      });
   },
 
   /**
