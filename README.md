@@ -1,6 +1,6 @@
 # LeoTranslate
 
-It's an add-on for the Firefox browser that helps you translate a words from English to Russian and let you add these words to your dictionary. 
+It's an add-on for the Firefox browser that helps you translate words from English to Russian and let you add these words to your dictionary. 
 
 The installation process is described below.
 
