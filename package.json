@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "iframe-resizer": "^3.5.14",
     "lodash": "^4.17.4",
     "vue": "^2.3.3"
   },

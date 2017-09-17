@@ -3,9 +3,10 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    vue: './src/vue/main.js',
-    background: './src/background/main.js',
-    content: './src/content/main.js'
+    'browser-action': './src/vue/browser-action.js',
+    'context-popup': './src/vue/context-popup.js',
+    'background': './src/background/main.js',
+    'content': './src/content/main.js'
   },
   output: {
     path: path.resolve(__dirname, './extension/dist'),
@@ -38,7 +39,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.runtime.esm.js'
     }
   },
   devServer: {

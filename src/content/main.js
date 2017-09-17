@@ -1,5 +1,3 @@
-import { iframeResizer } from 'iframe-resizer';
-
 const iframeId = 'leoTranslateIFrame';
 
 let mouseX = 0;
@@ -15,6 +13,15 @@ document.body.addEventListener('mousedown', e => {
   } else if (e.button === 2) {
     mouseX = e.pageX;
     mouseY = e.pageY;
+  }
+});
+
+window.addEventListener('message', e => {
+  if (chrome.extension.getURL('') === e.origin+'/') {
+    const iFrame = getIframe();
+
+    iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
+    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
   }
 });
 
@@ -50,10 +57,6 @@ function getIframe () {
     }
 
     document.body.appendChild(container);
-
-    container.onload = () => {
-      iframeResizer({}, '#'+container.id);
-    };
 
     container.src = chrome.extension.getURL('/templates/context-popup.html');
   }

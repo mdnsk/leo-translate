@@ -1,10 +1,15 @@
 <template>
-  <translate @close="close" @translate="translate" :text="text" :page-url="pageUrl" :page-title="pageTitle" />
+  <translate
+      @close="close"
+      @translate="translate"
+      @translations-loaded="translationsLoaded"
+      :text="text"
+      :page-url="pageUrl"
+      :page-title="pageTitle" />
 </template>
 
 <script>
   import Translate from './Translate.vue';
-  import { iframeResizerContentWindow } from 'iframe-resizer';
 
   export default {
     data () {
@@ -21,7 +26,10 @@
       // The component was created after the context-menu-clicked event had been fired,
       // So it needs to request this data again.
       chrome.runtime.sendMessage({ id: 'vue-context-popup-created' })
-          .then(response => this.onMessageListener(response));
+          .then(response => {
+            this.onMessageListener(response);
+            parent.postMessage('vue-context-popup-resized', this.pageUrl);
+          });
     },
 
     beforeDestroy () {
@@ -35,6 +43,10 @@
 
       translate (text) {
         this.text = text;
+      },
+
+      translationsLoaded () {
+        parent.postMessage('vue-context-popup-resized', this.pageUrl);
       },
 
       onMessageListener (message) {
