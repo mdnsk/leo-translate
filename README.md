@@ -14,8 +14,6 @@ All the paths are specified relatively to the root of this repository.
 
 * First of all you need to install dependencies:
     * `npm install`
-* Next, you need to apply the patch `iframeResizer.patch` to the iFrame Resizer library, because it does not work in extension environment. If you have a Linux system, you can do it with the patch command:
-    * `patch node_modules/iframe-resizer/js/iframeResizer.js < iframeResizer.patch`
 * Next, you need to translate all the vue components to plain javascript code with the command:
     * `npm run build`
 * Next, you need to pack the extension into zip-file:
@@ -39,8 +37,6 @@ All the paths are specified relatively to the root of this repository.
 
 * Сначала нужно установить зависимости:
     * `npm install`
-* Далее необходимо наложить патч `iframeResizer.patch` на библиотеку iFrame Resizer, т.к. она не работает в среде расширения. В Linux это можно сделать командой patch:
-    * `patch node_modules/iframe-resizer/js/iframeResizer.js < iframeResizer.patch`
 * Далее выполнить сборку js-modules и транслировать *.vue файлы в js командой:
     * `npm run build`
 * Далее собрать расширение в архив:

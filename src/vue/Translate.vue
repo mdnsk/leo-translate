@@ -100,6 +100,7 @@
             this.errorMessage = data.error_msg;
           }
           this.loading = false;
+          this.$emit('translations-loaded');
         }).catch(error => {
           this.laoding = false;
           console.error(error);
