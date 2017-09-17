@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "lodash": "^4.17.4",
+    "debounce": "^1.0.2",
     "vue": "^2.3.3"
   },
   "devDependencies": {

@@ -11,8 +11,8 @@
 
 <script>
   import api from '../leoApi';
+  import debounce from 'debounce';
   import history from './history';
-  import { debounce } from 'lodash';
   import Translate from './Translate.vue';
 
   // Debounced search function
