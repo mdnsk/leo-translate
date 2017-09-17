@@ -10,7 +10,7 @@ The installation process is described below.
 
 ### Build the extension
 
-All the paths is specified relatively to the root of the repository.
+All the paths are specified relatively to the root of this repository.
 
 * First of all you need to install dependencies:
     * `npm install`
