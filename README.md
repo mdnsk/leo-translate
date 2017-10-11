@@ -51,4 +51,4 @@ All the paths are specified relatively to the root of this repository.
 
 После выполнения этих команд, в `extension/web-ext-artifacts/` должен появиться файл расширения: `leo_translate-{Номер версии}.zip`
 
-Чтобы установить расширение, нужно подписать его в addons.mozilla.org или (не рекомендуется!) переключить в Firefox на странице about:config параметр `xpinstall.signatures.required` в `false`  
+Чтобы установить расширение из файла, нужно подписать его в addons.mozilla.org или (не рекомендуется!) переключить в Firefox на странице about:config параметр `xpinstall.signatures.required` в `false`  
