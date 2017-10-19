@@ -2,21 +2,21 @@
   <div class="browser-action">
     <input class="browser-action__search" v-model="input" placeholder="Type text to translate...">
     <translate v-show="showTranslate" @close="close" @translate="translate" :text="text" page-url="" page-title="From LeoTranslator browser extension" />
-    <ul v-show="showHistory">
-      <li v-for="item in history" style="display: block"><a :href="getHistoryWordUrl(item)">{{ item }}</a></li>
+    <ul v-show="hasHistory && ! showTranslate">
+      <li v-for="item in history" class="browser-action__history-item"><a :href="getHistoryWordUrl(item)">{{ item }}</a></li>
     </ul>
-    <button v-show="showHistory" @click="clearHistory">Clear history</button>
+    <div v-show="! showTranslate" class="browser-action__controls">
+      <button @click="clearHistory" :disabled="! hasHistory" class="browser-action__btn">Clear history</button>
+      <button @click="openOptionsPage" class="browser-action__btn">Settings</button>
+    </div>
   </div>
 </template>
 
 <script>
   import api from '../leoApi';
   import debounce from 'debounce';
-  import history from './history';
+  import history from '../history';
   import Translate from './Translate.vue';
-
-  // Debounced search function
-  let debSch;
 
   export default {
     data () {
@@ -32,8 +32,8 @@
         return this.text !== '';
       },
 
-      showHistory () {
-        return ! this.showTranslate && this.history.length > 0;
+      hasHistory () {
+        return this.history.length > 0;
       }
     },
 
@@ -76,18 +76,23 @@
 
       clearHistory () {
         history.clear();
-      }
+      },
+
+      openOptionsPage () {
+        chrome.runtime.openOptionsPage();
+      },
+
+      search: debounce(function () {
+        this.translate(this.input);
+      }, 1000)
     },
 
     watch: {
-      input (text) {
-        if (text === '') {
+      input (input) {
+        if (input === '') {
           this.close();
         } else {
-          if (debSch === undefined) {
-            debSch = debounce(() => this.translate(this.input), 1000);
-          }
-          debSch();
+          this.search();
         }
       }
     },
@@ -109,5 +114,9 @@
     width: 100%;
     padding: 15px;
     border: none;
+  }
+
+  .browser-action__history-item {
+    display: block;
   }
 </style>

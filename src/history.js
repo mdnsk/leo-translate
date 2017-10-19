@@ -14,8 +14,8 @@ export default {
   },
 
   getAll () {
-    return browser.storage.local.get('history')
-      .then(data => data.history ? data.history : []);
+    return browser.storage.local.get({ history: [] })
+      .then(data => data.history);
   },
 
   clear () {
