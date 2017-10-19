@@ -3,10 +3,11 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    'browser-action': './src/vue/browser-action.js',
-    'context-popup': './src/vue/context-popup.js',
-    'background': './src/background/main.js',
-    'content': './src/content/main.js'
+    'browser-action': './src/entry/browser-action.js',
+    'context-popup': './src/entry/context-popup.js',
+    'options-page': './src/entry/options-page.js',
+    'background': './src/entry/background.js',
+    'content': './src/entry/content.js'
   },
   output: {
     path: path.resolve(__dirname, './extension/dist'),

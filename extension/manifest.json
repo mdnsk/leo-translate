@@ -33,6 +33,11 @@
     "default_popup": "templates/browser-action.html"
   },
 
+  "options_ui": {
+    "page": "templates/options-page.html",
+    "browser_style": true
+  },
+
   "permissions": [
     "contextMenus",
     "activeTab",

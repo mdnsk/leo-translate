@@ -31,7 +31,7 @@
 
 <script>
   import api from '../leoApi';
-  import history from './history';
+  import history from '../history';
 
   export default {
     props: ['text', 'pageUrl', 'pageTitle'],
