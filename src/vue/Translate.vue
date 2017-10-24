@@ -27,7 +27,7 @@
     </div>
     <div v-if="isContextVisible" class="translate__context-container">
       <div class="align-center">
-        <button @click="showContext = !showContext" class="button-link">Show Context</button>
+        <button @click="showContext = !showContext" class="button-link">{{ (showContext ? 'Hide' : 'Show')+' context' }}</button>
       </div>
       <div v-show="showContext">{{ context }}</div>
     </div>
