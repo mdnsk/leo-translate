@@ -24,7 +24,7 @@ chrome.contextMenus.create({
 // It is requested when ContextPopup's create event fires.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.id === 'vue-popup-created') {
-      sendResponse(lastContextMessage);
+    sendResponse(lastContextMessage);
   }
 });
 
