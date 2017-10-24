@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import ContextPopup from '../vue/ContextPopup.vue';
+import Popup from '../vue/Popup.vue';
 
 new Vue({
   el: '#context-popup',
-  render: h => h(ContextPopup)
+  render: h => h(Popup)
 });

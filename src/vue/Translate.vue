@@ -25,6 +25,12 @@
         </li>
       </ul>
     </div>
+    <div v-if="isContextVisible" class="translate__context-container">
+      <div class="align-center">
+        <button @click="showContext = !showContext" class="button-link">Show Context</button>
+      </div>
+      <div v-show="showContext">{{ context }}</div>
+    </div>
     <audio id="translatePlayer" type="audio/mpeg" :src="soundUrl" preload="none"></audio>
   </div>
 </template>
@@ -32,9 +38,36 @@
 <script>
   import api from '../leoApi';
   import history from '../history';
+  import options from '../options';
 
   export default {
-    props: ['text', 'pageUrl', 'pageTitle'],
+    props: {
+      text: String,
+      pageUrl: String,
+      pageTitle: String,
+      context: {
+        type: String,
+        default: ''
+      }
+    },
+
+    data () {
+      return {
+        // Data
+        transcription: '',
+        translations: [],
+        wordForms: [],
+        soundUrl: '',
+        errorMessage: '',
+
+        // Element states
+        loading: true,
+        showContext: false,
+
+        // Options
+        isContextVisible: false
+      };
+    },
 
     computed: {
       dictionaryForm () {
@@ -50,28 +83,9 @@
       }
     },
 
-    data () {
-      return {
-        loading: true,
-        transcription: '',
-        translations: [],
-        wordForms: [],
-        soundUrl: '',
-        errorMessage: ''
-      };
-    },
-
-    watch: {
-      text (text) {
-        if (text !== '') {
-          this.fetchTranslation();
-        }
-      }
-    },
-
     methods: {
       addToDictionary (translation) {
-        api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle).then(data => {
+        api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle, this.context).then(data => {
           if (data.error_msg === '') {
             chrome.runtime.sendMessage({
               id: 'vue-show-notification',
@@ -100,9 +114,10 @@
             this.errorMessage = data.error_msg;
           }
           this.loading = false;
-          this.$emit('translations-loaded');
+          this.$emit('resized');
         }).catch(error => {
           this.laoding = false;
+          this.$emit('resized');
           console.error(error);
         });
       },
@@ -141,13 +156,29 @@
 
       translate (text) {
         this.$emit('translate', text);
+      }
+    },
+
+    watch: {
+      text (text) {
+        if (text !== '') {
+          this.fetchTranslation();
+        }
       },
+
+      showContext () {
+        this.$emit('resized');
+      }
+    },
+
+    created () {
+      options.getOption('context-visible', false).then(val => this.isContextVisible = val);
     }
   }
 </script>
 
 <style>
-  @import "style.css";
+  @import "../assets/style.css";
 
   .translate {
     background-color: #fff;
@@ -165,10 +196,12 @@
 
   .translate__text {
     margin: 3px auto 3px 0;
+    word-break: break-all;
   }
 
   .translate__transcription {
     margin-right: 5px;
+    word-wrap: break-word;
   }
 
   .translate__base-form-link {
@@ -190,6 +223,7 @@
     border-bottom: 1px solid #fff;
     position: relative;
     cursor: pointer;
+    word-wrap: break-word;
   }
 
   .translate__rating {
@@ -214,5 +248,10 @@
   .translate__item:hover, .translate__btn:hover {
     background-color: #ededf0;
     border-color: #b1b1b3;
+  }
+
+  .translate__context-container {
+    display: flex;
+    flex-direction: column;
   }
 </style>

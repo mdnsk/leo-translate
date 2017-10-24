@@ -31,3 +31,18 @@ button {
 button::-moz-focus-inner {
     border: 0;
 }
+
+.button-link {
+    display: inline-block;
+    border: 0;
+    padding: 0;
+    background-color: inherit;
+    text-decoration: dashed;
+    color: #45a1ff;
+    border-bottom: 1px dotted;
+    cursor: pointer;
+}
+
+.align-center {
+    text-align: center;
+}
