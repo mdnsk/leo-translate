@@ -102,7 +102,7 @@
 </script>
 
 <style>
-  @import "style.css";
+  @import "../assets/style.css";
 
   .browser-action {
     min-width: 300px;

@@ -23,19 +23,15 @@ chrome.contextMenus.create({
 // Listen for request for lastContentMessage
 // It is requested when ContextPopup's create event fires.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.id === 'vue-context-popup-created') {
-    sendResponse(lastContextMessage);
+  if (message.id === 'vue-popup-created') {
+      sendResponse(lastContextMessage);
   }
 });
 
 // Listen for close translate message
 chrome.runtime.onMessage.addListener(message => {
   if (message.id === 'vue-translate-close') {
-    chrome.tabs.query({currentWindow: true, active: true}, tabs => {
-      for (let tab of tabs) {
-        chrome.tabs.sendMessage(tab.id, { id: 'translate-close' });
-      }
-    });
+    sendMessageToCurrentTab({ id: 'translate-close' });
   }
 });
 
@@ -50,3 +46,8 @@ chrome.runtime.onMessage.addListener(message => {
     });
   }
 });
+
+function sendMessageToCurrentTab (message) {
+  return browser.tabs.query({currentWindow: true, active: true})
+    .then(tabs => browser.tabs.sendMessage(tabs[0].id, message));
+}
