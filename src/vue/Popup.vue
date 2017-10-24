@@ -1,5 +1,6 @@
 <template>
   <translate
+      class="popup"
       @close="close"
       @translate="translate"
       @resized="onPopupResizedListener"
@@ -89,3 +90,9 @@
     },
   };
 </script>
+
+<style>
+  .popup {
+    padding: 3px;
+  }
+</style>
