@@ -3,7 +3,11 @@ import options from '../options';
 const elements = document.querySelectorAll('.js-option:not([data-if-checked])');
 const dependent = document.querySelectorAll('.js-option[data-if-checked]');
 
+let localOptions = {};
+
 options.getAllOptions().then(ops => {
+  localOptions = ops;
+
   for (let i = 0; i < elements.length; i++) {
     initElement(elements[i]);
   }
@@ -23,21 +27,22 @@ function onOptionChange (event) {
   const key = event.target.name;
   const val = event.target.checked;
 
-  options.setOption(key, val).then(() => {
-    const dependent = document.querySelectorAll('.js-option[data-if-checked="'+key+'"]');
+  updateLocalOption(key, val);
 
-    if (dependent.length > 0) {
-      const event = new Event('change');
+  options.setAllOptions(localOptions);
+}
 
-      for (let i = 0; i < dependent.length; i++) {
-        if (val) {
-          dependent[i].disabled = false;
-        } else {
-          dependent[i].checked = false;
-          dependent[i].dispatchEvent(event);
-          dependent[i].disabled = true;
-        }
-      }
+function updateLocalOption (key, val) {
+  const dependent = document.querySelectorAll('.js-option[data-if-checked="'+key+'"]');
+
+  localOptions[key] = val;
+
+  if (dependent.length > 0) {
+    for (let i = 0; i < dependent.length; i++) {
+      dependent[i].disabled = !val;
+      dependent[i].checked = false;
+
+      updateLocalOption(dependent[i].name, false);
     }
-  });
+  }
 }
