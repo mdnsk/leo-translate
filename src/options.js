@@ -1,17 +1,11 @@
 export default {
   /**
-   * Set option value
+   * Set all options
    *
-   * @param key
-   * @param val
+   * @param options
    */
-  setOption (key, val) {
-    return this.getAllOptions()
-      .then(options => {
-        options[key] = val;
-
-        return browser.storage.local.set({ options });
-      });
+  setAllOptions (options) {
+    return browser.storage.local.set({ options });
   },
 
   /**
