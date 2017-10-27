@@ -6,8 +6,8 @@
       @resized="onPopupResizedListener"
       :text="text"
       :context="context"
-      :page-url="pageUrl"
-      :page-title="pageTitle" />
+      :page-url="url"
+      :page-title="title" />
 </template>
 
 <script>
@@ -18,10 +18,10 @@
     data () {
       return {
         // Data
+        url: '',
         text: '',
+        title: '',
         context: '',
-        pageUrl: '',
-        pageTitle: '',
 
         // Options
         isContextCapturingEnabled: false
