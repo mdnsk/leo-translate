@@ -32,10 +32,7 @@ document.body.addEventListener('dblclick', e => {
       }
     }
 
-    const iFrame = getIFrame();
-
-    showIFrame(iFrame);
-    sendDataToIFrame(iFrame);
+    callTranslatePopup();
 
     function isAltClick () {
       return options['double-click-alt'] && e.altKey;
@@ -65,12 +62,25 @@ window.addEventListener('message', e => {
 
 chrome.runtime.onMessage.addListener(message => {
   if (message.id === 'context-menu-clicked') {
+    callTranslatePopup();
+  }
+});
+
+function callTranslatePopup () {
+  const maxLength = ContextExtractor.LIMIT * 2;
+
+  if (getSelection().toString().length > maxLength) {
+    chrome.runtime.sendMessage({
+      id: 'show-notification',
+      text: 'The selection is too long! It must be less than '+maxLength+' characters.'
+    });
+  } else {
     const iFrame = getIFrame();
 
     showIFrame(iFrame);
     sendDataToIFrame(iFrame);
   }
-});
+}
 
 function getIFrame () {
   let container = document.getElementById(IFRAME_ID);
