@@ -30,7 +30,7 @@
 
     methods: {
       close () {
-        chrome.runtime.sendMessage({ id: 'vue-translate-close' });
+        parent.postMessage({ id: 'vue-translate-close' }, '*');
       },
 
       translate (text) {
@@ -38,27 +38,29 @@
       },
 
       onPopupResizedListener () {
-        parent.postMessage({ id: 'vue-popup-resized' }, this.pageUrl);
+        parent.postMessage({ id: 'vue-popup-resized' }, '*');
       },
 
       onRuntimeMessageListener (message) {
         // The popup has been called with click in context menu item.
+        // So it needs to get the data.
         if (message.id === 'context-menu-clicked') {
-          this.text = message.text.trim();
-          this.pageUrl = message.url;
-          this.pageTitle = message.title;
-
-          // Request context from the content script.
-          if (this.isContextCapturingEnabled) {
-            parent.postMessage({ id: 'vue-popup-get-context' }, this.pageUrl);
-          }
+          parent.postMessage({ id: 'vue-popup-get-data' }, '*');
         }
       },
 
       onWindowMessageListener (message) {
-        // The context has been received from content script.
-        if (message.data.id === 'content-context' && this.isContextCapturingEnabled) {
-          this.context = message.data.context;
+        // The data have been received from content script.
+        if (message.data.id === 'content-data') {
+          this.url = message.data.url;
+          this.text = message.data.text;
+          this.title = message.data.title;
+
+          if (this.isContextCapturingEnabled) {
+            this.context = message.data.context;
+          }
+
+          this.onPopupResizedListener();
         }
       }
     },
@@ -77,11 +79,7 @@
     mounted () {
       // The component was mounted after the context-menu-clicked event had been fired,
       // So it needs to request the data again.
-      chrome.runtime.sendMessage({ id: 'vue-popup-created' })
-          .then(response => {
-            this.onRuntimeMessageListener(response);
-            parent.postMessage('vue-popup-resized', this.pageUrl);
-          });
+      parent.postMessage({ id: 'vue-popup-get-data' }, '*');
     },
 
     beforeDestroy () {

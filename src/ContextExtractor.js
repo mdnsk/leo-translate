@@ -39,15 +39,15 @@ export class Context {
 
   get allSentences () {
     return this.joinedContext
-      .replace(/(.*?(?:\.|!|\?)(?:(?= [A-Z0-9])|$))/g, '$1'+Context.delimiter)
-      .split(Context.delimiter);
+      .replace(/(.*?(?:\.|!|\?)(?:(?= +[A-Z0-9])|$))/g, '$1'+Context.DELIMITER)
+      .split(Context.DELIMITER);
   }
 
   /**
    * Returns the delimiter which is used in regex splitting.
    * @returns {string}
    */
-  static get delimiter () {
+  static get DELIMITER () {
     return '|leo-translate-delimiter|';
   }
 }

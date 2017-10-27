@@ -1,20 +1,49 @@
+import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
 
 const IFRAME_ID = 'leoTranslateIFrame';
 
 let mouseX = 0;
 let mouseY = 0;
+let options = {};
+
+// Fetch options from local storage
+optionsStorage.getAllOptions().then(data => options = data);
 
 document.body.addEventListener('mousedown', e => {
   if (e.button === 0) {
-    const container = document.getElementById(IFRAME_ID);
+    hideIFrame();
+  }
 
-    if (container !== null) {
-      container.style.display = 'none';
-    }
-  } else if (e.button === 2) {
+  if (e.button === 2 || e.button === 0) {
     mouseX = e.pageX;
     mouseY = e.pageY;
+  }
+});
+
+document.body.addEventListener('dblclick', e => {
+  if (options['double-click']) {
+    // If there's a key constraint.
+    if (options['double-click-ctrl'] || options['double-click-alt']) {
+
+      // If there's no a condition that has passed a check.
+      if (! (isAltClick() || isCtrlClick())) {
+        return;
+      }
+    }
+
+    const iFrame = getIFrame();
+
+    showIFrame(iFrame);
+    sendDataToIFrame(iFrame);
+
+    function isAltClick () {
+      return options['double-click-alt'] && e.altKey;
+    }
+
+    function isCtrlClick () {
+      return options['double-click-ctrl'] && e.ctrlKey;
+    }
   }
 });
 
@@ -26,23 +55,20 @@ window.addEventListener('message', e => {
     if (e.data.id === 'vue-popup-resized') {
       iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
       iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
-    } else if (e.data.id === 'vue-popup-get-context') {
-      sendContextToIFrame(iFrame);
+    } else if (e.data.id === 'vue-popup-get-data') {
+      sendDataToIFrame(iFrame);
+    } else if (e.data.id === 'vue-translate-close') {
+      hideIFrame();
     }
   }
 });
 
 chrome.runtime.onMessage.addListener(message => {
-  const iFrame = getIFrame();
-
   if (message.id === 'context-menu-clicked') {
-    iFrame.style.display = 'block';
-    iFrame.style.top = mouseY+'px';
-    iFrame.style.left = mouseX+'px';
+    const iFrame = getIFrame();
 
-    sendContextToIFrame(iFrame);
-  } else if (message.id === 'translate-close') {
-    iFrame.style.display = 'none';
+    showIFrame(iFrame);
+    sendDataToIFrame(iFrame);
   }
 });
 
@@ -74,9 +100,36 @@ function getIFrame () {
   return container;
 }
 
-function sendContextToIFrame (iFrame, context = null) {
-  iFrame.contentWindow.postMessage({
-    id: 'content-context',
-    context: context === null ? new ContextExtractor(getSelection()).getContext().getSentence() : context
-  }, chrome.extension.getURL(''));
+function showIFrame (iFrame = null) {
+  const container = iFrame || getIFrame();
+
+  container.style.display = 'block';
+  container.style.top = mouseY+'px';
+  container.style.left = mouseX+'px';
+}
+
+function hideIFrame() {
+  const container = document.getElementById(IFRAME_ID);
+
+  if (container !== null) {
+    container.style.display = 'none';
+  }
+}
+
+function sendDataToIFrame (iFrame) {
+  const selection = getSelection();
+
+  const message = {
+    id: 'content-data',
+    url: document.URL,
+    text: selection.toString(),
+    title: document.title,
+    context: ''
+  };
+
+  if (options['context-capturing']) {
+    message['context'] = new ContextExtractor(selection).getContext().getSentence();
+  }
+
+  iFrame.contentWindow.postMessage(message, chrome.extension.getURL(''));
 }
