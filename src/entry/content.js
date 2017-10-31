@@ -1,6 +1,7 @@
 import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
 
+const IFRAME_WIDTH = 250;
 const IFRAME_ID = 'leoTranslateIFrame';
 
 let mouseX = 0;
@@ -16,7 +17,7 @@ document.body.addEventListener('mousedown', e => {
   }
 
   if (e.button === 2 || e.button === 0) {
-    mouseX = e.pageX;
+    mouseX = e.pageX + IFRAME_WIDTH > window.document.body.clientWidth ? window.document.body.clientWidth - IFRAME_WIDTH : e.pageX;
     mouseY = e.pageY;
   }
 });
@@ -93,7 +94,8 @@ function getIFrame () {
       display: 'none',
       border: 'none',
       zIndex: 10000,
-      boxShadow: '0 0 1px 0'
+      boxShadow: '0 0 1px 0',
+      width: IFRAME_WIDTH
     };
 
     container.id = IFRAME_ID;
