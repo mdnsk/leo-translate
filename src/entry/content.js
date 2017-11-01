@@ -50,7 +50,7 @@ window.addEventListener('message', e => {
 
     if (e.data.id === 'vue-popup-resized') {
       // Set height of iFrame
-      iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
+      iFrame.style.height = iFrame.contentWindow.document.body.scrollHeight+'px';
 
       // Set position of iFrame
       setPositionOfIFrame(iFrame);
@@ -160,7 +160,7 @@ function setPositionOfIFrame (iFrame) {
     selectionLeft = rect.left + window.scrollX;
   }
 
-  const iFrameHeight = parseInt(iFrame.height) + IFRAME_VERTICAL_MARGIN;
+  const iFrameHeight = iFrame.offsetHeight + IFRAME_VERTICAL_MARGIN;
   const pageWidth = window.document.documentElement.clientWidth + window.scrollX;
   const pageHeight = window.document.documentElement.clientHeight + window.scrollY;
 
