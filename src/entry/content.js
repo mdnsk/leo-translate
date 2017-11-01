@@ -2,10 +2,13 @@ import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
 
 const IFRAME_WIDTH = 250;
+const IFRAME_VERTICAL_MARGIN = 3;
 const IFRAME_ID = 'leoTranslateIFrame';
 
-let mouseX = 0;
-let mouseY = 0;
+let selectionTop = 0;
+let selectionLeft = 0;
+let selectionBottom = 0;
+
 let options = {};
 
 // Fetch options from local storage
@@ -14,11 +17,6 @@ optionsStorage.getAllOptions().then(data => options = data);
 document.body.addEventListener('mousedown', e => {
   if (e.button === 0) {
     hideIFrame();
-  }
-
-  if (e.button === 2 || e.button === 0) {
-    mouseX = e.pageX + IFRAME_WIDTH > window.document.body.clientWidth ? window.document.body.clientWidth - IFRAME_WIDTH : e.pageX;
-    mouseY = e.pageY;
   }
 });
 
@@ -51,8 +49,11 @@ window.addEventListener('message', e => {
     const iFrame = getIFrame();
 
     if (e.data.id === 'vue-popup-resized') {
-      iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
+      // Set height of iFrame
       iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
+
+      // Set position of iFrame
+      setPositionOfIFrame(iFrame);
     } else if (e.data.id === 'vue-popup-get-data') {
       sendDataToIFrame(iFrame);
     } else if (e.data.id === 'vue-translate-close') {
@@ -70,7 +71,7 @@ chrome.runtime.onMessage.addListener(message => {
 function callTranslatePopup () {
   const maxLength = ContextExtractor.LIMIT * 2;
 
-  if (getSelection().toString().length > maxLength) {
+  if (window.getSelection().toString().length > maxLength) {
     chrome.runtime.sendMessage({
       id: 'show-notification',
       text: 'The selection is too long! It must be less than '+maxLength+' characters.'
@@ -95,7 +96,8 @@ function getIFrame () {
       border: 'none',
       zIndex: 10000,
       boxShadow: '0 0 1px 0',
-      width: IFRAME_WIDTH
+      width: IFRAME_WIDTH+'px',
+      height: '67px'
     };
 
     container.id = IFRAME_ID;
@@ -116,8 +118,8 @@ function showIFrame (iFrame = null) {
   const container = iFrame || getIFrame();
 
   container.style.display = 'block';
-  container.style.top = mouseY+'px';
-  container.style.left = mouseX+'px';
+
+  setPositionOfIFrame(container);
 }
 
 function hideIFrame() {
@@ -129,7 +131,7 @@ function hideIFrame() {
 }
 
 function sendDataToIFrame (iFrame) {
-  const selection = getSelection();
+  const selection = window.getSelection();
 
   const message = {
     id: 'content-data',
@@ -144,4 +146,27 @@ function sendDataToIFrame (iFrame) {
   }
 
   iFrame.contentWindow.postMessage(message, chrome.extension.getURL(''));
+}
+
+function setPositionOfIFrame (iFrame) {
+  const selection = window.getSelection();
+
+  // Refresh coordinates of a selection if it exists.
+  if (selection.rangeCount > 0) {
+    const rect = selection.getRangeAt(0).getBoundingClientRect();
+
+    selectionTop = rect.top + window.scrollY;
+    selectionBottom = rect.bottom + window.scrollY;
+    selectionLeft = rect.left + window.scrollX;
+  }
+
+  const iFrameHeight = parseInt(iFrame.height) + IFRAME_VERTICAL_MARGIN;
+  const pageWidth = window.document.documentElement.clientWidth + window.scrollX;
+  const pageHeight = window.document.documentElement.clientHeight + window.scrollY;
+
+  const x = selectionLeft + IFRAME_WIDTH > pageWidth ? pageWidth - IFRAME_WIDTH : selectionLeft;
+  const y = selectionBottom + iFrameHeight > pageHeight && selectionTop - iFrameHeight > 0 ? selectionTop - iFrameHeight : selectionBottom + IFRAME_VERTICAL_MARGIN;
+
+  iFrame.style.top = y+'px';
+  iFrame.style.left = x+'px';
 }
