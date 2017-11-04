@@ -85,7 +85,7 @@
     beforeDestroy () {
       chrome.runtime.onMessage.removeListener(this.onRuntimeMessageListener);
       window.removeEventListener('message', this.onWindowMessageListener);
-    },
+    }
   };
 </script>
 
