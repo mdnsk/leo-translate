@@ -14,35 +14,6 @@ let options = {};
 // Fetch options from local storage
 optionsStorage.getAllOptions().then(data => options = data);
 
-document.body.addEventListener('mousedown', e => {
-  if (e.button === 0) {
-    hideIFrame();
-  }
-});
-
-document.body.addEventListener('dblclick', e => {
-  if (options['double-click']) {
-    // If there's a key constraint.
-    if (options['double-click-ctrl'] || options['double-click-alt']) {
-
-      // If there's no a condition that has passed a check.
-      if (! (isAltClick() || isCtrlClick())) {
-        return;
-      }
-    }
-
-    callTranslatePopup();
-
-    function isAltClick () {
-      return options['double-click-alt'] && e.altKey;
-    }
-
-    function isCtrlClick () {
-      return options['double-click-ctrl'] && e.ctrlKey;
-    }
-  }
-});
-
 // Listen for messages from the iFrame
 window.addEventListener('message', e => {
   if (chrome.extension.getURL('') === e.origin+'/') {
