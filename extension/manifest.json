@@ -15,8 +15,14 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["dist/content.js"],
+      "js": ["dist/content-render.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content-capture.js"],
+      "run_at": "document_end",
+      "all_frames": true
     }
   ],
 

@@ -1,13 +1,14 @@
-var path = require('path')
-var webpack = require('webpack')
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    'browser-action': './src/entry/browser-action.js',
-    'context-popup': './src/entry/context-popup.js',
-    'options-page': './src/entry/options-page.js',
     'background': './src/entry/background.js',
-    'content': './src/entry/content.js'
+    'options-page': './src/entry/options-page.js',
+    'context-popup': './src/entry/context-popup.js',
+    'browser-action': './src/entry/browser-action.js',
+    'content-render': './src/entry/content-render.js',
+    'content-capture': './src/entry/content-capture.js'
   },
   output: {
     path: path.resolve(__dirname, './extension/dist'),
@@ -74,4 +75,4 @@ if (process.env.NODE_ENV === 'production') {
       minimize: true
     })
   ])
-}
+};
