@@ -71,15 +71,13 @@ export default {
   /**
    * Returns English translation of Russian word.
    *
-   * @param word
+   * @param q      The sentence to translate
+   * @param source Origin language
+   * @param target Target language
    * @returns {Promise}
    */
-  translateFromRussian (word) {
-    const body = encodeParams({
-      q: word,
-      source: 'ru',
-      target: 'en'
-    });
+  translateSentence (q, source = 'ru', target = 'en') {
+    const body = encodeParams({ q, source, target });
 
     return fetch(
         config.api+config.translateFromRussian+'?'+body,
