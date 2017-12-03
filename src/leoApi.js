@@ -5,22 +5,11 @@ const config = {
   // API paths
   getTranslations: '/gettranslates',
   addWordToDictionary: '/addword',
+  translateFromRussian: '/translate.php',
 
   // Site paths
   openWordInDictionary: '/glossary/learn/internet?utm_source=ll_plugin&utm_medium=plugin&utm_campaign=simplifiedcontent#'
 };
-
-function prepareParams (paramsObj) {
-  const params = new URLSearchParams();
-
-  params.append('port', 1001);
-
-  for (const param in paramsObj) {
-    params.append(param, paramsObj[param]);
-  }
-
-  return params;
-}
 
 export default {
   /**
@@ -34,7 +23,7 @@ export default {
    * @returns {Promise}
    */
   addWordToDictionary (word, translation, pageUrl, pageTitle, context = '') {
-    const body = prepareParams({
+    const body = encodeParams({
       word,
       context,
       tword: translation,
@@ -42,16 +31,11 @@ export default {
       context_title: pageTitle
     });
 
-    return fetch(config.api+config.addWordToDictionary+'?port=1001', {
-        body,
-        method: 'POST',
-        credentials: 'same-origin'
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-      });
+    return fetch(
+        config.api+config.addWordToDictionary+'?port=1001',
+        { body, method: 'POST', credentials: 'same-origin' }
+      )
+      .then(returnJsonIfOk);
   },
 
   /**
@@ -61,21 +45,17 @@ export default {
    * @returns {Promise}
    */
   getTranslations (word) {
-    const body = prepareParams({
+    const body = encodeParams({
       word,
       include_media: 1,
       app_word_forms: 1
     });
 
-    return fetch(config.api+config.getTranslations+'?port=1001', {
-        body,
-        method: 'POST'
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-      });
+    return fetch(
+        config.api+config.getTranslations+'?port=1001',
+        { body, method: 'POST' }
+      )
+      .then(returnJsonIfOk);
   },
 
   /**
@@ -86,5 +66,49 @@ export default {
    */
   getWordDictionaryUrl (word) {
     return config.url+config.openWordInDictionary+encodeURIComponent(word);
+  },
+
+  /**
+   * Returns English translation of Russian word.
+   *
+   * @param word
+   * @returns {Promise}
+   */
+  translateFromRussian (word) {
+    const body = encodeParams({
+      q: word,
+      source: 'ru',
+      target: 'en'
+    });
+
+    return fetch(
+        config.api+config.translateFromRussian+'?'+body,
+        { method: 'GET' }
+      )
+      .then(returnJsonIfOk);
   }
 };
+
+function encodeParams (paramsObj) {
+  const params = new URLSearchParams();
+
+  params.append('port', 1001);
+
+  for (const param in paramsObj) {
+    params.append(param, paramsObj[param]);
+  }
+
+  return params;
+}
+
+/**
+ *
+ * @param response
+ */
+function returnJsonIfOk(response) {
+  if (response.ok) {
+    return response.json();
+  }
+
+  throw new Error('Invalid response.');
+}
