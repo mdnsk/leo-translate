@@ -15,21 +15,33 @@
       <div class="translate__meta">
         <div v-if="transcription" class="translate__transcription">[{{ transcription }}]</div>
         <div v-if="dictionaryForm" class="translate__base-form">
-          Dictionary form: <a class="translate__base-form-link" href="javascript:void(0)" @click.prevent="translate(wordForms[0].word)">{{ dictionaryForm }}</a>
+          Dictionary form:
+          <a class="translate__base-form-link"
+             href="javascript:void(0)"
+             @click.prevent="translate(wordForms[0].word)">
+            {{ dictionaryForm }}
+          </a>
         </div>
       </div>
       <ul class="translate__list">
-        <li class="translate__item" v-for="trans in translations" @click.prevent="addToDictionary(trans.value)" title="Add this meaning to the dictionary.">
+        <li class="translate__item"
+            v-for="trans in translations"
+            @click.prevent="addToDictionary(trans.value)"
+            title="Add this meaning to the dictionary.">
           <div class="translate__rating" :style="{width: trans.rating+'%'}"></div>
           {{ trans.value }}
         </li>
       </ul>
     </div>
-    <div v-if="isContextVisible" class="translate__context-container">
-      <div class="align-center">
-        <button @click="showContext = !showContext" class="button-link">{{ (showContext ? 'Hide' : 'Show')+' context' }}</button>
+    <div v-if="context !== ''" class="translate__context-container">
+      <div class="translate__context-controls">
+        <button @click="toggleTranslatedContext" class="button-link">
+          {{ showTranslatedContext ? 'Show origin' : 'Translate context' }}
+        </button>
       </div>
-      <div v-show="showContext">{{ context }}</div>
+      <div v-show="context !== '' || translatedContext !== ''" class="translate__context-content">
+        {{ showTranslatedContext ? translatedContext : context }}
+      </div>
     </div>
     <audio id="translatePlayer" type="audio/mpeg" :src="soundUrl" preload="none"></audio>
   </div>
@@ -59,13 +71,11 @@
         wordForms: [],
         soundUrl: '',
         errorMessage: '',
+        translatedContext: '',
 
         // Element states
         loading: true,
-        showContext: false,
-
-        // Options
-        isContextVisible: false
+        showTranslatedContext: false
       };
     },
 
@@ -156,6 +166,20 @@
 
       translate (text) {
         this.$emit('translate', text);
+      },
+
+      toggleTranslatedContext () {
+        if (! this.showTranslatedContext) {
+          if (this.translatedContext === '') {
+            this.translatedContext = 'Loading...';
+            api.translateSentence(this.context, 'en', 'ru').then(data => this.translatedContext = data.translation);
+          }
+          if (! this.showContext) {
+            this.showContext = true;
+          }
+        }
+
+        this.showTranslatedContext = !this.showTranslatedContext;
       }
     },
 
@@ -166,13 +190,23 @@
         }
       },
 
-      showContext () {
+      loading () {
+        this.$emit('resized');
+      },
+
+      showTranslatedContext () {
+        this.$emit('resized');
+      },
+
+      // Clear the translated context if the context has been updated
+      context () {
+        this.translatedContext = '';
+        this.showTranslatedContext = false;
+      },
+
+      translatedContext () {
         this.$emit('resized');
       }
-    },
-
-    created () {
-      options.getOption('context-visible', false).then(val => this.isContextVisible = val);
     }
   }
 </script>
@@ -250,8 +284,13 @@
     border-color: #b1b1b3;
   }
 
-  .translate__context-container {
-    display: flex;
-    flex-direction: column;
+  .translate__context-controls {
+    border-top: 1px solid #ccc;
+    text-align: center;
   }
+
+  .translate__context-content {
+    margin-top: 3px;
+  }
+
 </style>
