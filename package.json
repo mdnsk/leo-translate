@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "web-ext:run": "web-ext run --source-dir ./extension/",
-    "web-ext:build": "web-ext build --source-dir ./extension/"
+    "web-ext:build": "web-ext build --source-dir ./extension/",
+    "web-ext:sign": "web-ext sign --source-dir ./extension/"
   },
   "dependencies": {
     "debounce": "^1.0.2",
