@@ -31,6 +31,10 @@ document.body.addEventListener('dblclick', e => {
       }
     }
 
+    if (e.target.nodeName === 'INPUT') {
+      return;
+    }
+    
     callTranslatePopup();
 
     function isAltClick () {
