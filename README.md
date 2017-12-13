@@ -9,7 +9,6 @@ Also you can build the add-on by yourself. The building process is described bel
 
 ### Requirements
 * [Node.js 6+](https://nodejs.org/en/)
-* [Web-ext](https://github.com/mozilla/web-ext)
 
 ### Build the extension
 
@@ -20,8 +19,7 @@ All the paths are specified relatively to the root of this repository.
 * Next, you need to translate all the vue components to plain javascript code with the command:
     * `npm run build`
 * Next, you need to pack the extension into zip-file:
-    * `cd extension/`
-    * `web-ext build`
+    * `npm run web-ext:build`
 
 
 # LeoTranslate
@@ -35,7 +33,6 @@ All the paths are specified relatively to the root of this repository.
 
 ### Для сборки требуется установить:
 * [Node.js 6+](https://nodejs.org/en/)
-* [Web-ext](https://github.com/mozilla/web-ext)
 
 ### Сборка
 
@@ -46,8 +43,7 @@ All the paths are specified relatively to the root of this repository.
 * Далее выполнить сборку js-modules и транслировать *.vue файлы в js командой:
     * `npm run build`
 * Далее собрать расширение в архив:
-    * `cd extension/`
-    * `web-ext build`
+    * `npm run web-ext:build`
 
 После выполнения этих команд, в `extension/web-ext-artifacts/` должен появиться файл расширения: `leo_translate-{Номер версии}.zip`
 
