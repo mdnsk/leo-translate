@@ -35,7 +35,13 @@ document.body.addEventListener('dblclick', e => {
       return;
     }
     
-    callTranslatePopup();
+    const text = window.getSelection().toString();
+
+    if (!containsAnyEnglishLetter(text)) {
+      return;
+    }
+
+    callTranslatePopup(text);
 
     function isAltClick () {
       return options['double-click-alt'] && e.altKey;
@@ -47,6 +53,10 @@ document.body.addEventListener('dblclick', e => {
 
     function isCmdClick () {
       return options['double-click-meta'] && e.metaKey;
+    }
+
+    function containsAnyEnglishLetter(str) {
+      return /.*[a-zA-Z].*/.test(str);
     }
   }
 });
@@ -72,14 +82,14 @@ window.addEventListener('message', e => {
 
 chrome.runtime.onMessage.addListener(message => {
   if (message.id === 'context-menu-clicked') {
-    callTranslatePopup();
+    callTranslatePopup(window.getSelection().toString());
   }
 });
 
-function callTranslatePopup () {
+function callTranslatePopup (text) {
   const maxLength = ContextExtractor.LIMIT * 2;
 
-  if (window.getSelection().toString().length > maxLength) {
+  if (text.length > maxLength) {
     chrome.runtime.sendMessage({
       id: 'show-notification',
       text: 'The selection is too long! It must be less than '+maxLength+' characters.'
