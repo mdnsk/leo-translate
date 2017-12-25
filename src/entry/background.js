@@ -5,6 +5,9 @@ chrome.contextMenus.create({
   contexts: ['selection'],
   onclick: (info, tab) => {
     chrome.tabs.sendMessage(tab.id, { id: 'context-menu-clicked' });
+  },
+  icons: {
+    '16': '../icons/icon.svg'
   }
 });
 

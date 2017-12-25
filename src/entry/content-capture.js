@@ -15,10 +15,10 @@ document.body.addEventListener('mousedown', e => {
 document.body.addEventListener('dblclick', e => {
   if (options['double-click']) {
     // If there's a key constraint.
-    if (options['double-click-ctrl'] || options['double-click-alt']) {
+    if (options['double-click-ctrl'] || options['double-click-alt'] || options['double-click-alt']) {
 
       // If there are no conditions that have passed a check.
-      if (! (isAltClick(e) || isCtrlClick(e))) {
+      if (! (isAltClick(e) || isCtrlClick(e) || isCmdClick(e))) {
         return;
       }
     }
@@ -47,4 +47,8 @@ function isAltClick (e) {
 
 function isCtrlClick (e) {
   return options['double-click-ctrl'] && e.ctrlKey;
+}
+
+function isCmdClick (e) {
+  return options['double-click-meta'] && e.metaKey;
 }

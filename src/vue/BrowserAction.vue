@@ -83,7 +83,12 @@
       },
 
       search: debounce(function () {
-        this.translate(this.input);
+        // If there are Russian letters then we translate them from Russian before.
+        if (this.input.match(/[а-яА-Я]/) !== null) {
+          api.translateSentence(this.input).then(data => this.translate(data.translation));
+        } else {
+          this.translate(this.input);
+        }
       }, 1000)
     },
 
