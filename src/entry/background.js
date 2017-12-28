@@ -4,7 +4,11 @@ chrome.contextMenus.create({
   title: 'Translate with Leo',
   contexts: ['selection'],
   onclick: (info, tab) => {
-    chrome.tabs.sendMessage(tab.id, { id: 'context-menu-clicked' });
+    chrome.tabs.sendMessage(tab.id, {
+      id: 'context-menu-clicked',
+      text: info.selectionText,
+      context: ''
+    });
   },
   icons: {
     '16': '../icons/icon.svg'

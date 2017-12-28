@@ -1,5 +1,5 @@
 import optionsStorage from '../options';
-// import ContextExtractor from '../ContextExtractor';
+import ContextExtractor from '../ContextExtractor';
 
 let options = {};
 
@@ -7,8 +7,18 @@ let options = {};
 optionsStorage.getAllOptions().then(data => options = data);
 
 document.body.addEventListener('mousedown', e => {
+  // If left button clicked, close popup
   if (e.button === 0) {
     closePopup();
+  }
+
+  // If right button clicked, remember coordinates
+  else if (e.button === 2) {
+    window.parent.postMessage({
+      id: 'leo-translate-mouse',
+      x: e.clientX,
+      y: e.clientY
+    }, '*');
   }
 });
 
@@ -28,16 +38,32 @@ document.body.addEventListener('dblclick', e => {
 });
 
 function closePopup () {
-  console.log('close popup');
+  chrome.runtime.sendMessage({ id: 'close-popup' });
 }
 
 function openPopup () {
-  console.log('open popup');
   const selection = window.getSelection();
 
   if (selection.rangeCount > 0) {
     const rect = selection.getRangeAt(0).getBoundingClientRect();
-    console.log(rect);
+
+    const message = {
+      id: 'leo-translate-open-popup',
+      text: selection.toString(),
+      context: '',
+      isMain: window.parent === window.self,
+      rect: {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left
+      }
+    };
+
+    if (options['context-capturing']) {
+      message.context = new ContextExtractor(selection).getContext().getSentence();
+    }
+
+    window.parent.postMessage(message, '*');
   }
 }
 
