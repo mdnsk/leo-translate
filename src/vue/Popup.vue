@@ -13,6 +13,12 @@
 <script>
   import options from '../options';
   import Translate from './Translate.vue';
+  import {
+    PROXY_CONTENT_CLOSE_POPUP,
+    PROXY_CONTENT_RESIZE_POPUP,
+    PROXY_CONTENT_GET_DATA,
+    CONTENT_OPEN_POPUP
+  } from '../messages';
 
   export default {
     data () {
@@ -30,7 +36,7 @@
 
     methods: {
       close () {
-        parent.postMessage({ id: 'vue-translate-close' }, '*');
+        chrome.runtime.sendMessage({ id: PROXY_CONTENT_CLOSE_POPUP });
       },
 
       translate (text) {
@@ -38,15 +44,7 @@
       },
 
       onPopupResizedListener () {
-        parent.postMessage({ id: 'vue-popup-resized' }, '*');
-      },
-
-      onRuntimeMessageListener (message) {
-        // The popup has been called with click in context menu item.
-        // So it needs to get the data.
-        if (message.id === 'context-menu-clicked') {
-          parent.postMessage({ id: 'vue-popup-get-data' }, '*');
-        }
+        chrome.runtime.sendMessage({ id: PROXY_CONTENT_RESIZE_POPUP });
       },
 
       onWindowMessageListener (message) {
@@ -68,22 +66,18 @@
     components: { Translate },
 
     created () {
-      chrome.runtime.onMessage.addListener(this.onRuntimeMessageListener);
       window.addEventListener('message', this.onWindowMessageListener);
 
-      options.getOption('context-capturing', false).then(val => {
-        this.isContextCapturingEnabled = true
-      });
+      options.getOption('context-capturing', false).then(val =>this.isContextCapturingEnabled = true);
     },
 
     mounted () {
       // The component was mounted after the context-menu-clicked event had been fired,
       // So it needs to request the data again.
-      parent.postMessage({ id: 'vue-popup-get-data' }, '*');
+      chrome.runtime.sendMessage({ id: PROXY_CONTENT_GET_DATA });
     },
 
     beforeDestroy () {
-      chrome.runtime.onMessage.removeListener(this.onRuntimeMessageListener);
       window.removeEventListener('message', this.onWindowMessageListener);
     }
   };

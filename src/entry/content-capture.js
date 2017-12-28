@@ -1,5 +1,6 @@
 import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
+import { PROXY_CONTENT_MOUSE, PROXY_CONTENT_OPEN_POPUP } from '../messages'
 
 let options = {};
 
@@ -14,11 +15,11 @@ document.body.addEventListener('mousedown', e => {
 
   // If right button clicked, remember coordinates
   else if (e.button === 2) {
-    window.parent.postMessage({
-      id: 'leo-translate-mouse',
+    sendMessage({
+      id: PROXY_CONTENT_MOUSE,
       x: e.clientX,
       y: e.clientY
-    }, '*');
+    });
   }
 });
 
@@ -38,7 +39,7 @@ document.body.addEventListener('dblclick', e => {
 });
 
 function closePopup () {
-  chrome.runtime.sendMessage({ id: 'close-popup' });
+  sendMessage({ id: 'close-popup' });
 }
 
 function openPopup () {
@@ -48,7 +49,7 @@ function openPopup () {
     const rect = selection.getRangeAt(0).getBoundingClientRect();
 
     const message = {
-      id: 'leo-translate-open-popup',
+      id: PROXY_CONTENT_OPEN_POPUP,
       text: selection.toString(),
       context: '',
       isMain: window.parent === window.self,
@@ -63,7 +64,7 @@ function openPopup () {
       message.context = new ContextExtractor(selection).getContext().getSentence();
     }
 
-    window.parent.postMessage(message, '*');
+    sendMessage(message);
   }
 }
 
@@ -77,4 +78,16 @@ function isCtrlClick (e) {
 
 function isCmdClick (e) {
   return options['double-click-meta'] && e.metaKey;
+}
+
+function sendMessage (message) {
+  message['frameIndex'] = -1;
+
+  for (let i = 0; i < window.top.frames.length; i++) {
+    if (window.top.frames[i] === self) {
+      message['frameIndex'] = i;
+    }
+  }
+
+  chrome.runtime.sendMessage(message);
 }
