@@ -1,73 +1,75 @@
 import Popup from '../Popup';
 import ContextExtractor from '../ContextExtractor';
+import {
+  PROXY_CONTENT_MOUSE,
+  PROXY_CONTENT_OPEN_POPUP,
+  PROXY_CONTENT_CLOSE_POPUP,
+  PROXY_CONTENT_RESIZE_POPUP,
+  PROXY_CONTENT_GET_DATA,
+  CONTENT_OPEN_POPUP
+} from '../messages';
 
 const popup = new Popup();
 
 let data = {};
-let mouse = {x: 0, y: 0};
+let mouse = { x: 0, y: 0 };
 
-window.addEventListener('message', e => {
-  // Listen for message from the Add-on's PopUp
-  if (chrome.extension.getURL('') === e.origin+'/') {
-    if (e.data.id === 'vue-popup-resized') {
-      popup.refreshHeight().setPosition(data.rect);
-    } else if (e.data.id === 'vue-popup-get-data') {
-      popup.sendData(data);
-    } else if (e.data.id === 'vue-translate-close') {
-      popup.hide();
+chrome.runtime.onMessage.addListener(message => {
+  if (message.id === PROXY_CONTENT_GET_DATA) {
+    popup.sendData(data);
+  }
+
+  else if (message.id === PROXY_CONTENT_RESIZE_POPUP) {
+    popup.refreshHeight().setPosition(data.rect);
+  }
+
+  else if (message.id === PROXY_CONTENT_CLOSE_POPUP) {
+    popup.hide();
+  }
+
+  else if (message.id === CONTENT_OPEN_POPUP || message.id === PROXY_CONTENT_OPEN_POPUP) {
+
+    if (checkSelectionLength(message.text)) {
+      data = message;
+
+      if (message.id === PROXY_CONTENT_OPEN_POPUP && message.frameIndex > -1) {
+        const frame = searchFrame(window.frames[message.frameIndex]);
+
+        if (frame !== null) {
+          const rect = frame.getBoundingClientRect();
+
+          data = Object.assign({}, data, {
+            rect: {
+              top: data.rect.top + rect.top,
+              bottom: data.rect.bottom + rect.top,
+              left: data.rect.left + rect.left
+            }
+          });
+        }
+      } else if (message.id === CONTENT_OPEN_POPUP) {
+        data.rect = { left: mouse.x, top: mouse.y, bottom: mouse.y };
+      }
+
+      popup.show().sendData(data).setPosition(data.rect);
     }
   }
 
-  // Listen for messages from content-capture.js which is embedded in each iFrame.
-  else if (e.data.id === 'leo-translate-open-popup'
-    && checkSelectionLength(e.data.text)
-    && checkSelectionLength(e.data.context)) {
+  else if (message.id === PROXY_CONTENT_MOUSE) {
+    mouse = {
+      x: message.x,
+      y: message.y
+    };
 
-    data = e.data;
-
-    if (! data.isMain) {
-      const frame = searchFrame(e.source);
+    if (message.frameIndex > -1) {
+      const frame = searchFrame(window.frames[message.frameIndex]);
 
       if (frame !== null) {
         const rect = frame.getBoundingClientRect();
 
-        data = Object.assign({}, data, {
-          rect: {
-            top: data.rect.top + rect.top,
-            bottom: data.rect.bottom + rect.top,
-            left: data.rect.left + rect.left
-          }
-        });
+        mouse.x += rect.left;
+        mouse.y += rect.top;
       }
-  }
-
-    popup.show().sendData(data).setPosition(data.rect);
-  }
-
-  else if (e.data.id === 'leo-translate-mouse') {
-    const frame = searchFrame(e.source);
-
-    mouse = {
-      x: parseInt(e.data.x),
-      y: parseInt(e.data.y)
-    };
-
-    if (frame !== null) {
-      const rect = frame.getBoundingClientRect();
-
-      mouse.x += rect.left;
-      mouse.y += rect.top;
     }
-  }
-});
-
-chrome.runtime.onMessage.addListener(message => {
-  if (message.id === 'context-menu-clicked' && checkSelectionLength(message.text)) {
-    data = message;
-
-    popup.show().sendData(data).setPosition({ left: mouse.x, top: mouse.y, bottom: mouse.y });
-  } else if (message.id === 'close-popup') {
-    popup.hide();
   }
 });
 

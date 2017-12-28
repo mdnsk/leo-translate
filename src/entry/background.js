@@ -1,3 +1,13 @@
+import {
+  CONTENT_OPEN_POPUP,
+  PROXY_CONTENT_MOUSE,
+  PROXY_CONTENT_GET_DATA,
+  PROXY_CONTENT_OPEN_POPUP,
+  PROXY_CONTENT_CLOSE_POPUP,
+  PROXY_CONTENT_RESIZE_POPUP,
+  BACKGROUND_SHOW_NOTIFICATION,
+} from '../messages';
+
 // Create context item
 chrome.contextMenus.create({
   id: 'leo-translate',
@@ -5,7 +15,7 @@ chrome.contextMenus.create({
   contexts: ['selection'],
   onclick: (info, tab) => {
     chrome.tabs.sendMessage(tab.id, {
-      id: 'context-menu-clicked',
+      id: CONTENT_OPEN_POPUP,
       text: info.selectionText,
       context: ''
     });
@@ -16,13 +26,23 @@ chrome.contextMenus.create({
 });
 
 // Listen for message to show in system notification
-chrome.runtime.onMessage.addListener(message => {
-  if (message.id === 'show-notification' || message.id === 'vue-show-notification') {
+chrome.runtime.onMessage.addListener((message, sender) => {
+  const proxyMessages = [
+    PROXY_CONTENT_MOUSE,
+    PROXY_CONTENT_GET_DATA,
+    PROXY_CONTENT_OPEN_POPUP,
+    PROXY_CONTENT_CLOSE_POPUP,
+    PROXY_CONTENT_RESIZE_POPUP
+  ];
+
+  if (message.id === BACKGROUND_SHOW_NOTIFICATION) {
     chrome.notifications.create({
       type: 'basic',
       title: 'Leo Translate',
       message: message.text,
       iconUrl: 'icons/icon.svg'
     });
+  } else if (proxyMessages.indexOf(message.id) > -1) {
+    chrome.tabs.sendMessage(sender.tab.id, message);
   }
 });
