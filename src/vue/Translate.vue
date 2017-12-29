@@ -51,6 +51,7 @@
   import api from '../leoApi';
   import history from '../history';
   import options from '../options';
+  import { BACKGROUND_SHOW_NOTIFICATION } from '../messages';
 
   export default {
     props: {
@@ -98,7 +99,7 @@
         api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle, this.context).then(data => {
           if (data.error_msg === '') {
             chrome.runtime.sendMessage({
-              id: 'vue-show-notification',
+              id: BACKGROUND_SHOW_NOTIFICATION,
               text: 'The "' + this.text + '" word has been added!'
             });
 

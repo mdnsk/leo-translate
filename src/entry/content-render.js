@@ -6,7 +6,8 @@ import {
   PROXY_CONTENT_CLOSE_POPUP,
   PROXY_CONTENT_RESIZE_POPUP,
   PROXY_CONTENT_GET_DATA,
-  CONTENT_OPEN_POPUP
+  CONTENT_OPEN_POPUP,
+  BACKGROUND_SHOW_NOTIFICATION
 } from '../messages';
 
 const popup = new Popup();
@@ -30,7 +31,9 @@ chrome.runtime.onMessage.addListener(message => {
   else if (message.id === CONTENT_OPEN_POPUP || message.id === PROXY_CONTENT_OPEN_POPUP) {
 
     if (checkSelectionLength(message.text)) {
-      data = message;
+      data = Object.assign({}, message, {
+        text: removeHtmlTags(message.text)
+      });
 
       if (message.id === PROXY_CONTENT_OPEN_POPUP && message.frameIndex > -1) {
         searchFrame(window.frames[message.frameIndex], frame => {
@@ -90,7 +93,7 @@ function checkSelectionLength (text) {
 
   if (text.length > maxLength) {
     chrome.runtime.sendMessage({
-      id: 'show-notification',
+      id: BACKGROUND_SHOW_NOTIFICATION,
       text: 'The selection is too long! It must be less than '+maxLength+' characters.'
     });
 
@@ -98,4 +101,8 @@ function checkSelectionLength (text) {
   }
 
   return true;
+}
+
+function removeHtmlTags (text) {
+  return text.replace(/[<>]/g, '');
 }
