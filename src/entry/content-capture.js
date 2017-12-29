@@ -1,6 +1,6 @@
 import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
-import { PROXY_CONTENT_MOUSE, PROXY_CONTENT_OPEN_POPUP } from '../messages'
+import { PROXY_CONTENT_MOUSE, PROXY_CONTENT_OPEN_POPUP, PROXY_CONTENT_CLOSE_POPUP } from '../messages'
 
 let options = {};
 
@@ -39,7 +39,7 @@ document.body.addEventListener('dblclick', e => {
 });
 
 function closePopup () {
-  sendMessage({ id: 'close-popup' });
+  sendMessage({ id: PROXY_CONTENT_CLOSE_POPUP });
 }
 
 function openPopup () {

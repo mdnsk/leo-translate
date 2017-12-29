@@ -33,9 +33,7 @@ chrome.runtime.onMessage.addListener(message => {
       data = message;
 
       if (message.id === PROXY_CONTENT_OPEN_POPUP && message.frameIndex > -1) {
-        const frame = searchFrame(window.frames[message.frameIndex]);
-
-        if (frame !== null) {
+        searchFrame(window.frames[message.frameIndex], frame => {
           const rect = frame.getBoundingClientRect();
 
           data = Object.assign({}, data, {
@@ -45,7 +43,7 @@ chrome.runtime.onMessage.addListener(message => {
               left: data.rect.left + rect.left
             }
           });
-        }
+        });
       } else if (message.id === CONTENT_OPEN_POPUP) {
         data.rect = { left: mouse.x, top: mouse.y, bottom: mouse.y };
       }
@@ -61,23 +59,25 @@ chrome.runtime.onMessage.addListener(message => {
     };
 
     if (message.frameIndex > -1) {
-      const frame = searchFrame(window.frames[message.frameIndex]);
-
-      if (frame !== null) {
+      searchFrame(window.frames[message.frameIndex], frame => {
         const rect = frame.getBoundingClientRect();
 
         mouse.x += rect.left;
         mouse.y += rect.top;
-      }
+      });
     }
   }
 });
 
-function searchFrame (contentWindow) {
+function searchFrame (contentWindow, cb = null) {
   const frames = document.querySelectorAll('iframe');
 
   for (let i = 0; i < frames.length; i++) {
     if (frames[i].contentWindow === contentWindow) {
+      if (typeof cb === 'function') {
+        cb(frames[i]);
+      }
+
       return frames[i];
     }
   }
