@@ -24,12 +24,19 @@
         </div>
       </div>
       <ul class="translate__list">
-        <li class="translate__item"
+        <li class="translate__item translate__meaning"
             v-for="trans in translations"
-            @click.prevent="addToDictionary(trans.value)"
+            @click="addToDictionary(trans.value)"
             title="Add this meaning to the dictionary.">
           <div class="translate__rating" :style="{width: trans.rating+'%'}"></div>
           {{ trans.value }}
+        </li>
+        <li class="translate__item">
+          <input @keyup.enter="onEnterMeaning"
+                 :disabled="!addMeaning"
+                 type="text"
+                 class="translate__add-meaning"
+                 placeholder="Type meaning and press Enter to send">
         </li>
       </ul>
     </div>
@@ -76,7 +83,8 @@
 
         // Element states
         loading: true,
-        showTranslatedContext: false
+        showTranslatedContext: false,
+        addMeaning: true
       };
     },
 
@@ -96,16 +104,19 @@
 
     methods: {
       addToDictionary (translation) {
-        api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle, this.context).then(data => {
-          if (data.error_msg === '') {
-            chrome.runtime.sendMessage({
-              id: BACKGROUND_SHOW_NOTIFICATION,
-              text: 'The "' + this.text + '" word has been added!'
-            });
+        return api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle, this.context)
+          .then(data => {
+            if (data.error_msg === '') {
+              chrome.runtime.sendMessage({
+                id: BACKGROUND_SHOW_NOTIFICATION,
+                text: 'The "'+this.text+'" word has been added!'
+              });
 
-            history.addWord(this.text);
-          }
-        });
+              history.addWord(this.text);
+            }
+
+            return data;
+          });
       },
 
       fetchTranslation () {
@@ -181,6 +192,20 @@
         }
 
         this.showTranslatedContext = !this.showTranslatedContext;
+      },
+
+      onEnterMeaning (e) {
+        this.addMeaning = false;
+
+        const meaning = e.target.value.trim();
+
+        if (meaning.length > 0) {
+          this.addToDictionary(meaning).then(() => {
+            this.addMeaning = true;
+
+            e.target.value = '';
+          });
+        }
       }
     },
 
@@ -191,18 +216,18 @@
         }
       },
 
+      // Clear the translated context if the context has been updated
+      context () {
+        this.translatedContext = '';
+        this.showTranslatedContext = false;
+      },
+
       loading () {
         this.$emit('resized');
       },
 
       showTranslatedContext () {
         this.$emit('resized');
-      },
-
-      // Clear the translated context if the context has been updated
-      context () {
-        this.translatedContext = '';
-        this.showTranslatedContext = false;
       },
 
       translatedContext () {
@@ -254,6 +279,9 @@
     display: block;
     margin: 0;
     padding: 2px 5px;
+  }
+
+  .translate__meaning {
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;
     position: relative;
@@ -280,7 +308,7 @@
     outline-color: #fff;
   }
 
-  .translate__item:hover, .translate__btn:hover {
+  .translate__meaning:hover, .translate__btn:hover {
     background-color: #ededf0;
     border-color: #b1b1b3;
   }
@@ -292,6 +320,16 @@
 
   .translate__context-content {
     margin-top: 3px;
+  }
+
+  .translate__add-meaning {
+    padding: 0;
+    border: 1px solid white;
+    width: 100%;
+  }
+
+  .translate__add-meaning:focus {
+    border-bottom-color: black;
   }
 
 </style>
