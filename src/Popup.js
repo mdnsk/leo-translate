@@ -88,7 +88,7 @@ export default class Popup {
 
       document.body.appendChild(this.popup);
 
-      this.popup.src = chrome.extension.getURL('/templates/context-popup.html');
+      this.popup.src = chrome.extension.getURL('/templates/popup-iframe.html');
     }
 
     return this.popup;

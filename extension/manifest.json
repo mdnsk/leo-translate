@@ -52,5 +52,5 @@
     "*://api.lingualeo.com/*"
   ],
 
-  "web_accessible_resources": ["templates/context-popup.html"]
+  "web_accessible_resources": ["templates/popup-iframe.html"]
 }
