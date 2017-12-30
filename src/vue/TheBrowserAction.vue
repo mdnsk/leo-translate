@@ -1,13 +1,36 @@
 <template>
-  <div class="browser-action">
-    <input class="browser-action__search" v-model="input" placeholder="Type text to translate...">
-    <translate v-show="showTranslate" @close="close" @translate="translate" :text="text" page-url="" page-title="From LeoTranslator browser extension" />
+  <div class="the-browser-action">
+    <input
+        class="the-browser-action__search"
+        v-model="input"
+        placeholder="Type text to translate..."
+    >
+    <translate
+        v-show="showTranslate"
+        :text="text"
+        page-url=""
+        page-title="From LeoTranslator browser extension"
+        @close="close"
+        @translate="translate"
+    />
     <ul v-show="hasHistory && ! showTranslate">
-      <li v-for="item in history" class="browser-action__history-item"><a :href="getHistoryWordUrl(item)">{{ item }}</a></li>
+      <li
+          v-for="item in history"
+          class="the-browser-action__history-item"
+      >
+        <a :href="getHistoryWordUrl(item)">{{ item }}</a>
+      </li>
     </ul>
-    <div v-show="! showTranslate" class="browser-action__controls">
-      <button @click="clearHistory" :disabled="! hasHistory" class="browser-action__btn">Clear history</button>
-      <button @click="openOptionsPage" class="browser-action__btn">Settings</button>
+    <div v-show="! showTranslate">
+      <button
+          :disabled="! hasHistory"
+          @click="clearHistory"
+      >
+        Clear history
+      </button>
+      <button @click="openOptionsPage">
+        Settings
+      </button>
     </div>
   </div>
 </template>
@@ -19,6 +42,8 @@
   import Translate from './Translate.vue';
 
   export default {
+    components: { Translate },
+
     data () {
       return {
         text: '',
@@ -34,6 +59,16 @@
 
       hasHistory () {
         return this.history.length > 0;
+      }
+    },
+
+    watch: {
+      input (input) {
+        if (input === '') {
+          this.close();
+        } else {
+          this.search();
+        }
       }
     },
 
@@ -90,38 +125,26 @@
           this.translate(this.input);
         }
       }, 1000)
-    },
-
-    watch: {
-      input (input) {
-        if (input === '') {
-          this.close();
-        } else {
-          this.search();
-        }
-      }
-    },
-
-    components: { Translate }
+    }
   };
 </script>
 
 <style>
   @import "../assets/style.css";
 
-  .browser-action {
+  .the-browser-action {
     min-width: 300px;
     padding: 0;
     margin: 0;
   }
 
-  .browser-action__search {
+  .the-browser-action__search {
     width: 100%;
     padding: 15px;
     border: none;
   }
 
-  .browser-action__history-item {
+  .the-browser-action__history-item {
     display: block;
   }
 </style>

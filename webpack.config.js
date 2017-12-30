@@ -5,7 +5,7 @@ module.exports = {
   entry: {
     'background': './src/entry/background.js',
     'options-page': './src/entry/options-page.js',
-    'context-popup': './src/entry/context-popup.js',
+    'popup-iframe': './src/entry/popup-iframe.js',
     'browser-action': './src/entry/browser-action.js',
     'content-render': './src/entry/content-render.js',
     'content-capture': './src/entry/content-capture.js'

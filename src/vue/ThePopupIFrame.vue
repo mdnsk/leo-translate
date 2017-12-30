@@ -1,13 +1,14 @@
 <template>
   <translate
-      class="popup"
-      @close="close"
-      @translate="translate"
-      @resized="onPopupResizedListener"
+      class="the-popup-iframe"
       :text="text"
       :context="context"
       :page-url="url"
-      :page-title="title" />
+      :page-title="title"
+      @close="close"
+      @translate="translate"
+      @resized="onPopupResizedListener"
+  />
 </template>
 
 <script>
@@ -21,6 +22,8 @@
   } from '../messages';
 
   export default {
+    components: { Translate },
+
     data () {
       return {
         // Data
@@ -32,6 +35,22 @@
         // Options
         isContextCapturingEnabled: false
       };
+    },
+
+    created () {
+      window.addEventListener('message', this.onWindowMessageListener);
+
+      options.getOption('context-capturing', false).then(val =>this.isContextCapturingEnabled = true);
+    },
+
+    mounted () {
+      // The component was mounted after the context-menu-clicked event had been fired,
+      // So it needs to request the data again.
+      chrome.runtime.sendMessage({ id: PROXY_CONTENT_GET_DATA });
+    },
+
+    beforeDestroy () {
+      window.removeEventListener('message', this.onWindowMessageListener);
     },
 
     methods: {
@@ -61,30 +80,12 @@
           this.onPopupResizedListener();
         }
       }
-    },
-
-    components: { Translate },
-
-    created () {
-      window.addEventListener('message', this.onWindowMessageListener);
-
-      options.getOption('context-capturing', false).then(val =>this.isContextCapturingEnabled = true);
-    },
-
-    mounted () {
-      // The component was mounted after the context-menu-clicked event had been fired,
-      // So it needs to request the data again.
-      chrome.runtime.sendMessage({ id: PROXY_CONTENT_GET_DATA });
-    },
-
-    beforeDestroy () {
-      window.removeEventListener('message', this.onWindowMessageListener);
     }
   };
 </script>
 
 <style>
-  .popup {
+  .the-popup-iframe {
     padding: 3px;
   }
 </style>

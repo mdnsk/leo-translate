@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import BrowserAction from '../vue/BrowserAction.vue';
+import TheBrowserAction from '../vue/TheBrowserAction.vue';
 
 new Vue({
-  el: '#browser-action',
-  render: h => h(BrowserAction)
+  el: '#the-browser-action',
+  render: h => h(TheBrowserAction)
 });
