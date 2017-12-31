@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "debounce": "^1.0.2",
+    "epic-spinners": "^1.0.1",
     "vue": "^2.3.3"
   },
   "devDependencies": {
