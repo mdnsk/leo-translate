@@ -121,7 +121,7 @@
               text = 'The "'+this.text+'" word has been added!';
               history.addWord(this.text);
             } else {
-              text = 'An error mesage received: '+data.error_msg;
+              text = 'An error message received: '+data.error_msg;
             }
 
             chrome.runtime.sendMessage({
