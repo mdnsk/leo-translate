@@ -163,11 +163,11 @@
       },
 
       onAddMeaningListener (meaning) {
-        this.isMeaningAdding = true;
-
         const trimmedMeaning = meaning.trim();
 
         if (trimmedMeaning.length > 0) {
+          this.isMeaningAdding = true;
+
           this.addToDictionary(trimmedMeaning).then(() => {
             this.isMeaningAdding = false;
           });
