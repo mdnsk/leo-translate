@@ -77,7 +77,7 @@
       this.loadHistory();
 
       setTimeout(() => {
-        document.querySelector('.browser-action__search').focus();
+        document.querySelector('.the-browser-action__search').focus();
       }, 150);
     },
 
