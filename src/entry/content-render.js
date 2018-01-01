@@ -1,4 +1,5 @@
 import Popup from '../Popup';
+import { removeHtmlTags } from '../helpers';
 import ContextExtractor from '../ContextExtractor';
 import {
   PROXY_CONTENT_MOUSE,
@@ -101,8 +102,4 @@ function checkSelectionLength (text) {
   }
 
   return true;
-}
-
-function removeHtmlTags (text) {
-  return text.replace(/[<>]/g, '');
 }

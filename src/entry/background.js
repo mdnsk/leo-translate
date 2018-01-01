@@ -7,6 +7,7 @@ import {
   PROXY_CONTENT_RESIZE_POPUP,
   BACKGROUND_SHOW_NOTIFICATION,
 } from '../messages';
+import { removeHtmlTags } from '../helpers';
 
 // Create context item
 chrome.contextMenus.create({
@@ -39,8 +40,8 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     chrome.notifications.create({
       type: 'basic',
       title: 'Leo Translate',
-      message: message.text,
-      iconUrl: 'icons/icon.svg'
+      iconUrl: 'icons/icon.svg',
+      message: removeHtmlTags(message.text)
     });
   } else if (proxyMessages.indexOf(message.id) > -1) {
     chrome.tabs.sendMessage(sender.tab.id, message);
