@@ -3,7 +3,7 @@
     <TranslateHeader
         :text="text"
         :sound-url="soundUrl"
-        @close="$emit('close')"
+        @close="onCloseListener"
     />
     <div
         v-if="isListLoading"
@@ -106,6 +106,7 @@
             return dictionaryForm;
           }
         }
+
         return '';
       }
     },
@@ -114,14 +115,19 @@
       addToDictionary (translation) {
         return api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle, this.context)
           .then(data => {
-            if (data.error_msg === '') {
-              chrome.runtime.sendMessage({
-                id: BACKGROUND_SHOW_NOTIFICATION,
-                text: 'The "'+this.text+'" word has been added!'
-              });
+            let text = '';
 
+            if (data.error_msg === '') {
+              text = 'The "'+this.text+'" word has been added!';
               history.addWord(this.text);
+            } else {
+              text = 'An error mesage received: '+data.error_msg;
             }
+
+            chrome.runtime.sendMessage({
+              id: BACKGROUND_SHOW_NOTIFICATION,
+              text
+            });
 
             return data;
           });
@@ -152,10 +158,6 @@
         });
       },
 
-      close () {
-        this.$emit('close');
-      },
-
       translate (text) {
         this.$emit('translate', text);
       },
@@ -170,6 +172,11 @@
             this.isMeaningAdding = false;
           });
         }
+      },
+
+      onCloseListener () {
+        this.isMeaningAdding = false;
+        this.$emit('close');
       }
     },
 
