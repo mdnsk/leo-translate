@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Leo Translate",
-  "version": "1.8.0",
+  "version": "1.8.1",
 
   "description": "Translate words on the internet pages using LinguaLeo API and add words to the LinguaLeo Dictionary.",
 
