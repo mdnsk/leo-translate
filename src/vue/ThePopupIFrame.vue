@@ -7,7 +7,7 @@
       :page-title="title"
       @close="close"
       @translate="translate"
-      @resized="onPopupResizedListener"
+      @resize="onPopupResizeListener"
   />
 </template>
 
@@ -62,7 +62,7 @@
         this.text = text;
       },
 
-      onPopupResizedListener () {
+      onPopupResizeListener () {
         chrome.runtime.sendMessage({ id: PROXY_CONTENT_RESIZE_POPUP });
       },
 
@@ -77,7 +77,7 @@
             this.context = message.data.context;
           }
 
-          this.onPopupResizedListener();
+          this.onPopupResizeListener();
         }
       }
     }

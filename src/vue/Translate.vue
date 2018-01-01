@@ -150,10 +150,10 @@
             this.errorMessage = data.error_msg;
           }
           this.isListLoading = false;
-          this.$emit('resized');
+          this.$emit('resize');
         }).catch(error => {
           this.laoding = false;
-          this.$emit('resized');
+          this.$emit('resize');
           console.error(error);
         });
       },
@@ -188,7 +188,7 @@
       },
 
       isListLoading () {
-        this.$emit('resized');
+        this.$emit('resize');
       }
     }
   }
