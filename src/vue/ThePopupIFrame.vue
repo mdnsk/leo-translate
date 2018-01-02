@@ -12,7 +12,6 @@
 </template>
 
 <script>
-  import options from '../options';
   import Translate from './Translate.vue';
   import {
     PROXY_CONTENT_CLOSE_POPUP,
@@ -30,17 +29,12 @@
         url: '',
         text: '',
         title: '',
-        context: '',
-
-        // Options
-        isContextCapturingEnabled: false
+        context: ''
       };
     },
 
     created () {
       window.addEventListener('message', this.onWindowMessageListener);
-
-      options.getOption('context-capturing', false).then(val =>this.isContextCapturingEnabled = true);
     },
 
     mounted () {
@@ -72,10 +66,7 @@
           this.url = message.data.url;
           this.text = message.data.text;
           this.title = message.data.title;
-
-          if (this.isContextCapturingEnabled) {
-            this.context = message.data.context;
-          }
+          this.context = message.data.context;
 
           this.onPopupResizeListener();
         }
