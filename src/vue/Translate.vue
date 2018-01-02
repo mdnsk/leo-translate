@@ -3,7 +3,7 @@
     <TranslateHeader
         :text="text"
         :sound-url="soundUrl"
-        @close="onCloseListener"
+        @close="$emit('close')"
     />
     <div
         v-if="isListLoading"
@@ -62,7 +62,10 @@
   import TranslateList from './TranslateList.vue';
   import TranslateHeader from './TranslateHeader.vue';
   import TranslateContext from './TranslateContext.vue';
-  import { BACKGROUND_SHOW_NOTIFICATION } from '../messages';
+  import {
+      PROXY_CONTENT_CLOSE_POPUP,
+      BACKGROUND_SHOW_NOTIFICATION
+  } from '../messages';
 
   export default {
     components: {
@@ -109,6 +112,26 @@
 
         return '';
       }
+    },
+
+    watch: {
+      text (text) {
+        if (text !== '') {
+          this.fetchTranslation();
+        }
+      },
+
+      isListLoading () {
+        this.$emit('resize');
+      }
+    },
+
+    created () {
+      chrome.runtime.onMessage.addListener(this.onRuntimeMessageListener);
+    },
+
+    beforeDestroy () {
+      chrome.runtime.onMessage.removeListener(this.onRuntimeMessageListener);
     },
 
     methods: {
@@ -174,21 +197,10 @@
         }
       },
 
-      onCloseListener () {
-        this.isMeaningAdding = false;
-        this.$emit('close');
-      }
-    },
-
-    watch: {
-      text (text) {
-        if (text !== '') {
-          this.fetchTranslation();
+      onRuntimeMessageListener (message) {
+        if (message.id === PROXY_CONTENT_CLOSE_POPUP) {
+          this.isMeaningAdding = false;
         }
-      },
-
-      isListLoading () {
-        this.$emit('resize');
       }
     }
   }
