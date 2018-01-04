@@ -3,6 +3,12 @@ export function removeHtmlTags (text) {
 }
 
 export function getBodyOffset () {
+  // Do not return offset if the body element doesn't have any position.
+  if (document.body.style.position === 'static' ||
+      document.body.style.position === '') {
+    return { top: 0, left: 0 };
+  }
+
   const rectBody = document.body.getBoundingClientRect();
   const rectDocument = document.documentElement.getBoundingClientRect();
 
