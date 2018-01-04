@@ -1,6 +1,9 @@
 import Popup from '../Popup';
-import { removeHtmlTags } from '../helpers';
 import ContextExtractor from '../ContextExtractor';
+import {
+  removeHtmlTags,
+  getBodyOffset
+} from '../helpers';
 import {
   PROXY_CONTENT_MOUSE,
   PROXY_CONTENT_OPEN_POPUP,
@@ -15,6 +18,7 @@ const popup = new Popup();
 
 let data = {};
 let mouse = { x: 0, y: 0 };
+let rect = { top: 0, bottom: 0, left: 0 };
 
 chrome.runtime.onMessage.addListener(message => {
   if (message.id === PROXY_CONTENT_GET_DATA) {
@@ -22,7 +26,7 @@ chrome.runtime.onMessage.addListener(message => {
   }
 
   else if (message.id === PROXY_CONTENT_RESIZE_POPUP) {
-    popup.refreshHeight().setPosition(data.rect);
+    popup.refreshHeight().setPosition(rect, getBodyOffset());
   }
 
   else if (message.id === PROXY_CONTENT_CLOSE_POPUP) {
@@ -32,27 +36,37 @@ chrome.runtime.onMessage.addListener(message => {
   else if (message.id === CONTENT_OPEN_POPUP || message.id === PROXY_CONTENT_OPEN_POPUP) {
 
     if (checkSelectionLength(message.text)) {
-      data = Object.assign({}, message, {
+      // Apply body offset to received coordinates.
+      // We need if because the popup is placed inside the body element.
+      const rectBody = getBodyOffset()
+
+      data = {
+        context: message.context,
         text: removeHtmlTags(message.text)
-      });
+      };
 
-      if (message.id === PROXY_CONTENT_OPEN_POPUP && message.frameIndex > -1) {
-        searchFrame(window.frames[message.frameIndex], frame => {
-          const rect = frame.getBoundingClientRect();
+      if (message.id === PROXY_CONTENT_OPEN_POPUP) {
+        rect = mergeRects(message.rect, rectBody);
 
-          data = Object.assign({}, data, {
-            rect: {
-              top: data.rect.top + rect.top,
-              bottom: data.rect.bottom + rect.top,
-              left: data.rect.left + rect.left
-            }
+        if (message.frameIndex > -1) {
+          searchFrame(window.frames[message.frameIndex], frame => {
+            const rectFrame = frame.getBoundingClientRect();
+
+            rect = mergeRects(rect, {
+              top: rectFrame.top,
+              left: rectFrame.left
+            });
           });
-        });
+        }
       } else if (message.id === CONTENT_OPEN_POPUP) {
-        data.rect = { left: mouse.x, top: mouse.y, bottom: mouse.y };
+        rect = mergeRects({ top: mouse.y, left: mouse.x }, rectBody);
       }
 
-      popup.show().sendData(data).setPosition(data.rect);
+      popup
+        .refreshSelectionScrolls()
+        .show()
+        .sendData(data)
+        .setPosition(rect, getBodyOffset());
     }
   }
 
@@ -64,10 +78,10 @@ chrome.runtime.onMessage.addListener(message => {
 
     if (message.frameIndex > -1) {
       searchFrame(window.frames[message.frameIndex], frame => {
-        const rect = frame.getBoundingClientRect();
+        const rectFrame = frame.getBoundingClientRect();
 
-        mouse.x += rect.left;
-        mouse.y += rect.top;
+        mouse.x += rectFrame.left;
+        mouse.y += rectFrame.top;
       });
     }
   }
@@ -102,4 +116,16 @@ function checkSelectionLength (text) {
   }
 
   return true;
+}
+
+function mergeRects(...rects) {
+  const result = { top: 0, left: 0, bottom: 0 };
+
+  rects.forEach(item => {
+    result.top += item.top;
+    result.left += item.left;
+    result.bottom += item.bottom === undefined ? item.top : item.bottom;
+  });
+
+  return result;
 }

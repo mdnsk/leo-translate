@@ -1,3 +1,5 @@
+import { getBodyOffset } from './helpers';
+
 export default class Popup {
 
   constructor () {
@@ -18,6 +20,9 @@ export default class Popup {
 
     // The Popup HTMLElement
     this.popup = null;
+
+    // Set scrolls
+    this.refreshSelectionScrolls();
   }
 
   show () {
@@ -56,14 +61,23 @@ export default class Popup {
     return this;
   }
 
+  refreshSelectionScrolls () {
+    this.selectionScrollY = window.scrollY;
+    this.selectionScrollX = window.scrollX;
+
+    return this;
+  }
+
   setPosition ({ left, top, bottom = null }) {
-    top = parseInt(top) + window.scrollY;
-    left = parseInt(left) + window.scrollX;
-    bottom = parseInt(bottom) + window.scrollY;
+    top = parseInt(top) + this.selectionScrollY;
+    left = parseInt(left) + this.selectionScrollX;
+    bottom = parseInt(bottom) + this.selectionScrollY;
+
+    const bodyOffset = getBodyOffset();
 
     const popupHeight = this.createPopup().offsetHeight + this.MARGIN_Y;
-    const pageWidth = window.document.documentElement.clientWidth + window.scrollX;
-    const pageHeight = window.document.documentElement.clientHeight + window.scrollY;
+    const pageWidth = window.document.documentElement.clientWidth + window.scrollX + bodyOffset.left;
+    const pageHeight = window.document.documentElement.clientHeight + window.scrollY + bodyOffset.top;
 
     const x = left + this.WIDTH > pageWidth ? pageWidth - this.WIDTH : left;
     const y = bottom + popupHeight > pageHeight && top - popupHeight > 0 ? top - popupHeight : bottom + this.MARGIN_Y;
