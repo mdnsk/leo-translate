@@ -52,7 +52,6 @@ function openPopup () {
       id: PROXY_CONTENT_OPEN_POPUP,
       text: selection.toString(),
       context: '',
-      isMain: window.parent === window.self,
       rect: {
         top: rect.top,
         bottom: rect.bottom,
