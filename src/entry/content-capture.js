@@ -24,33 +24,42 @@ document.body.addEventListener('mousedown', e => {
 });
 
 document.body.addEventListener('dblclick', e => {
-  if (options['double-click']) {
-    // If there's a key constraint.
-    if (options['double-click-ctrl'] || options['double-click-alt'] || options['double-click-alt']) {
-
-      // If there are no conditions that have passed a check.
-      if (! (isAltClick(e) || isCtrlClick(e) || isCmdClick(e))) {
-        return;
-      }
-    }
-
-    openPopup();
+  // Do nothing if dblclick handling is disabled.
+  if (! options['double-click']) {
+    return;
   }
+
+  // If there's a key constraint.
+  if (options['double-click-ctrl'] || options['double-click-alt'] || options['double-click-alt']) {
+
+    // If there are no conditions that have passed a check.
+    if (! (isAltClick(e) || isCtrlClick(e) || isCmdClick(e))) {
+      return;
+    }
+  }
+
+  const selection = window.getSelection();
+  const text = selection.toString().trim();
+
+  // Do nothing if there are no english letters.
+  if (! containsAnyEnglishLetter(text)) {
+    return;
+  }
+
+  openPopup(text, selection);
 });
 
 function closePopup () {
   sendMessage({ id: PROXY_CONTENT_CLOSE_POPUP });
 }
 
-function openPopup () {
-  const selection = window.getSelection();
-
+function openPopup (text, selection) {
   if (selection.rangeCount > 0) {
     const rect = selection.getRangeAt(0).getBoundingClientRect();
 
     const message = {
       id: PROXY_CONTENT_OPEN_POPUP,
-      text: selection.toString(),
+      text,
       context: '',
       rect: {
         top: rect.top,
@@ -77,6 +86,10 @@ function isCtrlClick (e) {
 
 function isCmdClick (e) {
   return options['double-click-meta'] && e.metaKey;
+}
+
+function containsAnyEnglishLetter (text) {
+  return /.*[a-zA-Z].*/.test(text);
 }
 
 function sendMessage (message) {
