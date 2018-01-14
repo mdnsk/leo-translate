@@ -74,11 +74,11 @@
 
     created () {
       chrome.storage.onChanged.addListener(this.changeHistoryListener);
+
       this.loadHistory();
 
-      setTimeout(() => {
-        document.querySelector('.the-browser-action__search').focus();
-      }, 150);
+      setTimeout(this.focus, 150);
+      setTimeout(this.focus, 500);
     },
 
     beforeDestroy () {
@@ -103,6 +103,10 @@
         if (changes.history && area === 'local') {
           this.loadHistory();
         }
+      },
+
+      focus () {
+        document.querySelector('.the-browser-action__search').focus();
       },
 
       getHistoryWordUrl (word) {
