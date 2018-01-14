@@ -17,7 +17,7 @@
         <input
             class="translate__add-meaning"
             type="text"
-            placeholder="Type meaning and press Enter to send"
+            placeholder="Type meaning and press Enter"
             @keyup.enter="onEnterMeaningListener"
         >
       </li>
