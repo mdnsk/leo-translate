@@ -10,21 +10,23 @@ import {
 import { removeHtmlTags } from '../helpers';
 
 // Create context item
-chrome.contextMenus.create({
-  id: 'leo-translate',
-  title: 'Translate with Leo',
-  contexts: ['selection'],
-  onclick: (info, tab) => {
-    chrome.tabs.sendMessage(tab.id, {
-      id: CONTENT_OPEN_POPUP,
-      text: info.selectionText,
-      context: ''
-    });
-  },
-  icons: {
-    '16': '../icons/icon.svg'
-  }
-});
+if (chrome.contextMenus !== undefined) {
+  chrome.contextMenus.create({
+    id: 'leo-translate',
+    title: 'Translate with Leo',
+    contexts: ['selection'],
+    onclick: (info, tab) => {
+      chrome.tabs.sendMessage(tab.id, {
+        id: CONTENT_OPEN_POPUP,
+        text: info.selectionText,
+        context: ''
+      });
+    },
+    icons: {
+      '16': '../icons/icon.svg'
+    }
+  });
+}
 
 // Listen for message to show in system notification
 chrome.runtime.onMessage.addListener((message, sender) => {
