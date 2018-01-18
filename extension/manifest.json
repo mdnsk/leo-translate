@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Leo Translate",
-  "version": "1.8.7",
+  "version": "1.8.8",
 
   "description": "Translate words on the internet pages using LinguaLeo API and add words to the LinguaLeo Dictionary.",
 
@@ -35,7 +35,7 @@
   "browser_action": {
     "browser_style": true,
     "default_icon": "icons/icon.svg",
-    "default_title": "Open dictionary",
+    "default_title": "LeoTranslate",
     "default_popup": "templates/browser-action.html"
   },
 
