@@ -206,7 +206,9 @@
   }
 </script>
 
-<style>
-  @import "../assets/style.css";
-  @import "../assets/popup.css";
+<style lang="scss">
+  .theme-leo-translate {
+    @import "../assets/themes/leo-translate/style.scss";
+    @import "../assets/themes/leo-translate/popup.scss";
+  }
 </style>
