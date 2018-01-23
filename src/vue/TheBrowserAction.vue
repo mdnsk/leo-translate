@@ -133,22 +133,24 @@
   };
 </script>
 
-<style>
-  @import "../assets/style.css";
+<style lang="scss">
+  .theme-leo-translate {
+    @import "../assets/themes/leo-translate/style.scss";
 
-  .the-browser-action {
-    min-width: 300px;
-    padding: 0;
-    margin: 0;
-  }
+    .the-browser-action {
+      min-width: 300px;
+      padding: 0;
+      margin: 0;
+    }
 
-  .the-browser-action__search {
-    width: 100%;
-    padding: 15px;
-    border: none;
-  }
+    .the-browser-action__search {
+      width: 100%;
+      padding: 15px;
+      border: none;
+    }
 
-  .the-browser-action__history-item {
-    display: block;
+    .the-browser-action__history-item {
+      display: block;
+    }
   }
 </style>
