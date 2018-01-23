@@ -1,6 +1,6 @@
 # LeoTranslate
 
-It's an add-on for the Firefox browser that helps you translate words from English to Russian and let you add these words to your dictionary.
+This is an add-on for the Firefox and Firefox for Android browsers that helps you translate words from English to Russian and let you add these words to the your dictionary.
  
 ## Installation
 [Get the Firefox Add-on from AMO gallery](https://addons.mozilla.org/en-US/firefox/addon/leo-translate/)
@@ -24,7 +24,7 @@ All the paths are specified relatively to the root of this repository.
 
 # LeoTranslate
 
-Расширение для Firefox, которое позволяет переводить слова c Английского на Русский на web-сайтах и добавлять переводы в словарь на Lingualeo.
+Расширение для браузеров Firefox и Firefox for Android, которое позволяет переводить слова c Английского на Русский на web-сайтах и добавлять переводы в словарь на Lingualeo.
 
 ## Установка
 [Скачать дополнение из каталога AMO](https://addons.mozilla.org/en-US/firefox/addon/leo-translate/)
