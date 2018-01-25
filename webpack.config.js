@@ -3,7 +3,9 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
+    'vendor': ['vue', 'debounce'],
     'background': './src/entry/background.js',
+    'apply-theme': './src/entry/apply-theme.js',
     'options-page': './src/entry/options-page.js',
     'popup-iframe': './src/entry/popup-iframe.js',
     'browser-action': './src/entry/browser-action.js',
@@ -59,6 +61,12 @@ module.exports = {
   performance: {
     hints: false
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: Infinity
+    })
+  ],
   node: {
     global: false
   }
