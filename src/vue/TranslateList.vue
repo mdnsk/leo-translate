@@ -1,21 +1,21 @@
 <template>
-  <div class="translate__list-container">
-    <ul class="translate__list">
+  <div class="translate-list">
+    <ul class="translate-list__list">
       <li
           v-for="trans in translationsWithRating" :key="trans.id"
-          class="translate__item translate__meaning"
+          class="translate-list__item translate-list__item_meaning"
           title="Add this meaning to the dictionary."
           @click="$emit('add-meaning', trans.value)"
       >
         <div
-            class="translate__rating"
+            class="translate-list__rating"
             :style="{width: trans.rating+'%'}"
         ></div>
         {{ trans.value }}
       </li>
-      <li class="translate__item">
+      <li class="translate-list__item">
         <input
-            class="translate__add-meaning"
+            class="translate-list__add-meaning"
             type="text"
             placeholder="Type meaning and press Enter"
             @keyup.enter="onEnterMeaningListener"
@@ -25,7 +25,7 @@
 
     <div
         v-if="isMeaningAdding"
-        class="translate__list-overlay"
+        class="translate-list__overlay"
     >
       <HollowDotsSpinner
           :animation-duration="500"

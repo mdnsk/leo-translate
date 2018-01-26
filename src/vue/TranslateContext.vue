@@ -1,9 +1,9 @@
 <template>
   <div
       v-if="context !== ''"
-      class="translate__context-container"
+      class="translate-context"
   >
-    <div class="translate__context-controls">
+    <div class="translate-context__controls">
       <button
           class="button-link"
           @click="toggleTranslatedContext"
@@ -11,7 +11,7 @@
         {{ showTranslatedContext ? 'Show origin' : 'Translate context' }}
       </button>
     </div>
-    <div class="translate__context-content">
+    <div class="translate-context__content">
       {{ showTranslatedContext ? translatedContext : context }}
     </div>
   </div>
