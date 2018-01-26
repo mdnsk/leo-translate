@@ -10,6 +10,7 @@
         :text="text"
         page-url=""
         page-title="From LeoTranslator browser extension"
+        class="the-browser-action__translate"
         @close="close"
         @translate="translate"
     />
@@ -151,6 +152,10 @@
 
     .the-browser-action__history-item {
       display: block;
+    }
+
+    .the-browser-action__translate {
+      padding: 3px;
     }
   }
 </style>
