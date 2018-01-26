@@ -1,14 +1,14 @@
 <template>
-  <div class="translate__header">
-    <h1 class="translate__text">{{ text }}</h1>
+  <div class="translate-header">
+    <h1 class="translate-header__text">{{ text }}</h1>
     <button
-        class="translate__btn translate__btn-play"
+        class="translate-header__btn translate-header__btn_play"
         @click="play"
     >
       Play
     </button>
     <button
-        class="translate__btn translate__btn-close"
+        class="translate-header__btn translate-header__btn_close"
         @click="$emit('close')"
     >
       X
