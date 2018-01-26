@@ -2,45 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <style>
-    label {
-      display: block;
-    }
-
-    .dependent-option {
-      padding-left: 10px;
-    }
-  </style>
+  <title>LeoTranslate Settings</title>
 </head>
 
 <body>
-  <h2>LeoTranslate Settings</h2>
-
-  <form>
-    <h3>Context Capturing</h3>
-    <label>
-      <input type="checkbox" name="context-capturing" class="js-option" disabled>
-      Enable Context Capturing (This is an experimental feature)
-    </label>
-
-    <h3>Double Click Translation</h3>
-    <label>
-      <input type="checkbox" name="double-click" class="js-option" disabled>
-      Double click to translate
-    </label>
-    <label class="dependent-option">
-      <input type="checkbox" name="double-click-ctrl" class="js-option" data-if-checked="double-click" disabled>
-      Only with Ctrl key.
-    </label>
-    <label class="dependent-option">
-      <input type="checkbox" name="double-click-alt" class="js-option" data-if-checked="double-click" disabled>
-      Only with Alt key.
-    </label>
-    <label class="dependent-option">
-      <input type="checkbox" name="double-click-meta" class="js-option" data-if-checked="double-click" disabled>
-      Only with Cmd (OSX) or Windows key.
-    </label>
-  </form>
+  <div id="the-options-page"></div>
 
   <script src="../dist/vendor.js"></script>
   <script src="../dist/options-page.js"></script>

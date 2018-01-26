@@ -25,12 +25,12 @@ document.body.addEventListener('mousedown', e => {
 
 document.body.addEventListener('dblclick', e => {
   // Do nothing if dblclick handling is disabled.
-  if (! options['double-click']) {
+  if (! options.doubleClick) {
     return;
   }
 
   // If there's a key constraint.
-  if (options['double-click-ctrl'] || options['double-click-alt'] || options['double-click-alt']) {
+  if (options.doubleClickCtrl || options.doubleClickAlt || options.doubleClickMeta) {
 
     // If there are no conditions that have passed a check.
     if (! (isAltClick(e) || isCtrlClick(e) || isCmdClick(e))) {
@@ -68,7 +68,7 @@ function openPopup (text, selection) {
       }
     };
 
-    if (options['context-capturing']) {
+    if (options.contextCapturing) {
       message.context = new ContextExtractor(selection).getContext().getSentence();
     }
 
@@ -77,15 +77,15 @@ function openPopup (text, selection) {
 }
 
 function isAltClick (e) {
-  return options['double-click-alt'] && e.altKey;
+  return options.doubleClickAlt && e.altKey;
 }
 
 function isCtrlClick (e) {
-  return options['double-click-ctrl'] && e.ctrlKey;
+  return options.doubleClickCtrl && e.ctrlKey;
 }
 
 function isCmdClick (e) {
-  return options['double-click-meta'] && e.metaKey;
+  return options.doubleClickMeta && e.metaKey;
 }
 
 function containsAnyEnglishLetter (text) {
