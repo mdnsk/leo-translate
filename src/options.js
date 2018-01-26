@@ -1,3 +1,17 @@
+// Declare default values for the options.
+export const defaultValues = Object.freeze({
+  contextCapturing: false,
+  doubleClick:      true,
+  doubleClickCtrl:  false,
+  doubleClickAlt:   false,
+  doubleClickMeta:  false,
+  theme:            'leo-translate',
+});
+
+function getOptionValue (options, key) {
+  return options[key] !== undefined ? options[key] : defaultValues[key];
+}
+
 export default {
   /**
    * Set all options
@@ -12,11 +26,14 @@ export default {
    * Return option by key
    *
    * @param key
-   * @param def Default value
    */
-  getOption (key, def) {
-    return browser.storage.local.get({ options: { [key]: def } })
-      .then(data => data.options[key]);
+  getOption (key) {
+    return browser.storage.local.get({ options: {} })
+      .then(data => getOptionValue(data.options, key))
+      .then(option => {
+        console.log(option);
+        return options;
+      })
   },
 
   /**
@@ -24,6 +41,16 @@ export default {
    */
   getAllOptions () {
     return browser.storage.local.get({ options: {}})
-      .then(data => data.options);
+      .then(data => {
+        const options = {};
+
+        for (const key in defaultValues) {
+          if (defaultValues.hasOwnProperty(key)) {
+            options[key] = getOptionValue(data.options, key);
+          }
+        }
+
+        return options;
+      });
   }
 };
