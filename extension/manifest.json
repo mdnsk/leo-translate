@@ -36,6 +36,18 @@
   "browser_action": {
     "browser_style": true,
     "default_icon": "icons/icon.svg",
+    "theme_icons": [
+      {
+        "light": "icons/light-icon.svg",
+        "dark": "icons/icon.svg",
+        "size": 16
+      },
+      {
+        "light": "icons/light-icon.svg",
+        "dark": "icons/icon.svg",
+        "size": 32
+      }
+    ],
     "default_title": "LeoTranslate",
     "default_popup": "templates/browser-action.html"
   },
