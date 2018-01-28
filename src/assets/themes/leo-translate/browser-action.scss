@@ -1,0 +1,39 @@
+.the-browser-action {
+  min-width: 300px;
+  padding: 0;
+  margin: 0;
+}
+
+.the-browser-action__search {
+  width: 100%;
+  padding: 15px;
+  border: none;
+}
+
+.the-browser-action__translate {
+  padding: 3px;
+}
+
+.the-browser-action__history-item {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.the-browser-action__history-link {
+  flex: 0 0 40%;
+  max-width: 40%;
+  margin: 0;
+  word-break: break-all;
+}
+.the-browser-action__history-meanings {
+  flex: 0 0 60%;
+  max-width: 60%;
+  margin: 0;
+  padding-left: 5px;
+  word-break: break-all;
+}
+
+.the-browser-action__controls {
+  text-align: center;
+  margin-bottom: 5px;
+}
