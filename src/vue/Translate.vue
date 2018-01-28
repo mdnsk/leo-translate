@@ -138,18 +138,18 @@
       addToDictionary (translation) {
         return api.addWordToDictionary(this.text, translation, this.pageUrl, this.pageTitle, this.context)
           .then(data => {
-            let text = '';
+            let notification = '';
 
             if (data.error_msg === '') {
-              text = 'The "'+this.text+'" word has been added!';
-              history.addWord(this.text);
+              notification = 'The "'+this.text+'" word has been added!';
+              history.addWord(this.text, translation, this.soundUrl);
             } else {
-              text = 'An error message received: '+data.error_msg;
+              notification = 'An error message received: '+data.error_msg;
             }
 
             chrome.runtime.sendMessage({
               id: BACKGROUND_SHOW_NOTIFICATION,
-              text
+              text: notification
             });
 
             return data;

@@ -19,10 +19,11 @@
           v-for="item in history"
           class="the-browser-action__history-item"
       >
-        <a :href="getHistoryWordUrl(item)">{{ item }}</a>
+        <a :href="getHistoryWordUrl(item.word)" class="the-browser-action__history-link">{{ item.word }}</a>
+        <p class="the-browser-action__history-meanings">{{ item.meanings.join(', ') }}</p>
       </li>
     </ul>
-    <div v-show="! showTranslate">
+    <div v-show="! showTranslate" class="the-browser-action__controls">
       <button
           :disabled="! hasHistory"
           @click="clearHistory"
@@ -137,25 +138,6 @@
 <style lang="scss">
   .theme-leo-translate {
     @import "../assets/themes/leo-translate/style.scss";
-
-    .the-browser-action {
-      min-width: 300px;
-      padding: 0;
-      margin: 0;
-    }
-
-    .the-browser-action__search {
-      width: 100%;
-      padding: 15px;
-      border: none;
-    }
-
-    .the-browser-action__history-item {
-      display: block;
-    }
-
-    .the-browser-action__translate {
-      padding: 3px;
-    }
+    @import "../assets/themes/leo-translate/browser-action.scss";
   }
 </style>

@@ -1,21 +1,54 @@
 export default {
-  addWord (word) {
+  addWord (word, meaning, soundUrl) {
     return this.getAll().then(history => {
-      if (history.indexOf(word) === -1) {
-        history.push(word);
+      const wordIndex = history.findIndex(item => item.word === word);
 
-        if (history.length > 10) {
-          history = history.slice(-10);
+      if (wordIndex === -1) {
+        history.push({
+          word,
+          soundUrl,
+          meanings: [ meaning ],
+        });
+      } else {
+        const currentItem = history[wordIndex];
+
+        if (currentItem.meanings.indexOf(meaning) === -1) {
+          currentItem.meanings.push(meaning);
         }
 
-        return browser.storage.local.set({ history });
+        history = history.filter((element, index) => index !== wordIndex);
+
+        history.push(currentItem);
       }
+
+      if (history.length > 10) {
+        history = history.slice(-10);
+      }
+
+      return browser.storage.local.set({ history });
     });
   },
 
   getAll () {
     return browser.storage.local.get({ history: [] })
-      .then(data => data.history);
+      .then(data => {
+        const all = [];
+
+        // Convert old string words to object representation.
+        data.history.forEach(item => {
+          if (typeof item === 'string') {
+            item = {
+              word: item,
+              soundUrl: '',
+              meanings: []
+            };
+          }
+
+          all.push(item);
+        });
+
+        return all;
+      });
   },
 
   clear () {
