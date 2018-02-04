@@ -19,7 +19,7 @@ export default {
    * @param options
    */
   setAllOptions (options) {
-    return browser.storage.local.set({ options });
+    return chrome.storage.local.set({ options });
   },
 
   /**
@@ -28,29 +28,27 @@ export default {
    * @param key
    */
   getOption (key) {
-    return browser.storage.local.get({ options: {} })
-      .then(data => getOptionValue(data.options, key))
-      .then(option => {
-        console.log(option);
-        return options;
-      })
+    return new Promise(resolve => {
+      chrome.storage.local.get({ options: {} }, data => resolve(getOptionValue(data.options, key)));
+    });
   },
 
   /**
    * Return all options
    */
   getAllOptions () {
-    return browser.storage.local.get({ options: {}})
-      .then(data => {
+    return new Promise(resolve => {
+      chrome.storage.local.get({ options: {}}, data => {
         const options = {};
 
         for (const key in defaultValues) {
-          if (defaultValues.hasOwnProperty(key)) {
-            options[key] = getOptionValue(data.options, key);
-          }
+            if (defaultValues.hasOwnProperty(key)) {
+                options[key] = getOptionValue(typeof data === 'object' ? data.options : {}, key);
+            }
         }
 
-        return options;
-      });
+        return resolve(options);
+      })
+    });
   }
 };

@@ -57,7 +57,12 @@
       },
 
       onPopupResizeListener () {
-        chrome.runtime.sendMessage({ id: PROXY_CONTENT_RESIZE_POPUP });
+        this.$nextTick().then(() => {
+          chrome.runtime.sendMessage({
+            id: PROXY_CONTENT_RESIZE_POPUP,
+            height: document.body.scrollHeight
+          });
+        });
       },
 
       onWindowMessageListener (message) {
