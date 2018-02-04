@@ -53,10 +53,10 @@ export default class Popup {
     return this;
   }
 
-  refreshHeight () {
+  refreshHeight (height) {
     const popup = this.createPopup();
 
-    popup.style.height = popup.contentWindow.document.body.scrollHeight+'px';
+    popup.style.height = height+'px';
 
     return this;
   }

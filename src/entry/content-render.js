@@ -26,7 +26,7 @@ chrome.runtime.onMessage.addListener(message => {
   }
 
   else if (message.id === PROXY_CONTENT_RESIZE_POPUP) {
-    popup.refreshHeight().setPosition(rect, getBodyOffset());
+    popup.refreshHeight(message.height).setPosition(rect, getBodyOffset());
   }
 
   else if (message.id === PROXY_CONTENT_CLOSE_POPUP) {

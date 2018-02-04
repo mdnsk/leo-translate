@@ -21,9 +21,6 @@ if (chrome.contextMenus !== undefined) {
         text: info.selectionText,
         context: ''
       });
-    },
-    icons: {
-      '16': '../icons/icon.svg'
     }
   });
 }

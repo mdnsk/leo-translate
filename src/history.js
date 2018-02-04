@@ -25,13 +25,13 @@ export default {
         history = history.slice(-10);
       }
 
-      return browser.storage.local.set({ history });
+      return chrome.storage.local.set({ history });
     });
   },
 
   getAll () {
-    return browser.storage.local.get({ history: [] })
-      .then(data => {
+    return new Promise(resolve => {
+      chrome.storage.local.get({ history: [] }, data => {
         const all = [];
 
         // Convert old string words to object representation.
@@ -47,11 +47,12 @@ export default {
           all.push(item);
         });
 
-        return all;
+        resolve(all);
       });
+    });
   },
 
   clear () {
-    return browser.storage.local.set({history: []});
+    return chrome.storage.local.set({history: []});
   }
 };
