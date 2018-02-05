@@ -105,6 +105,10 @@ $theme-path: '../assets/themes/leo-translate/';
     word-break: break-all;
 }
 
+.translate-header__btn:focus {
+    background-color: #ededf0;
+    border-color: #b1b1b3;
+}
 
 // TranslateList Component
 // ----------------------------------------------
