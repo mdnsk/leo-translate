@@ -15,7 +15,9 @@ export default class Popup {
       zIndex: 10000,
       boxShadow: '0 0 1px 0',
       width: this.WIDTH+'px',
-      height: '67px'
+      height: '67px',
+      padding: 0,
+      margin: 0
     };
 
     // The Popup HTMLElement
