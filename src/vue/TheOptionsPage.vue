@@ -57,6 +57,16 @@
           <option value="leo-translate">LeoTranslate</option>
         </select>
       </label>
+
+      <h3>Audio</h3>
+      <label>
+        <input
+                name="audio-auto-play"
+                v-model="options.audioAutoPlay"
+                type="checkbox"
+        >
+        Play audio automatically.
+      </label>
     </form>
   </div>
 </template>
@@ -73,7 +83,8 @@
           doubleClickCtrl:  null,
           doubleClickAlt:   null,
           doubleClickMeta:  null,
-          theme:            null
+          theme:            null,
+          audioAutoPlay:    null
         },
       };
     },
@@ -89,8 +100,8 @@
       // Set dependent options to false
       'options.doubleClick': function (val) {
         if (! val) {
+          this.options.doubleClickAlt  = false;
           this.options.doubleClickCtrl = false;
-          this.options.doubleClickAlt = false;
           this.options.doubleClickMeta = false;
         }
       }
