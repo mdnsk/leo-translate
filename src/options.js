@@ -6,6 +6,7 @@ export const defaultValues = Object.freeze({
   doubleClickAlt:   false,
   doubleClickMeta:  false,
   theme:            'leo-translate',
+  audioAutoPlay:    false
 });
 
 function getOptionValue (options, key) {
