@@ -42,11 +42,13 @@ chrome.runtime.onMessage.addListener(message => {
 
       data = {
         context: message.context,
-        text: removeHtmlTags(message.text)
+        text: removeHtmlTags(message.text),
+        frameIndex: -1
       };
 
       if (message.id === PROXY_CONTENT_OPEN_POPUP) {
         rect = mergeRects(message.rect, rectBody);
+        data.frameIndex = message.frameIndex;
 
         if (message.frameIndex > -1) {
           searchFrame(window.frames[message.frameIndex], frame => {
@@ -67,6 +69,13 @@ chrome.runtime.onMessage.addListener(message => {
         .show()
         .sendData(data)
         .setPosition(rect, getBodyOffset());
+    }
+
+    // Return focus back to the page, right after the popup was displayed.
+    document.getElementById(popup.ID).blur();
+
+    if (data.frameIndex > -1) {
+      window.frames[data.frameIndex].focus();
     }
   }
 

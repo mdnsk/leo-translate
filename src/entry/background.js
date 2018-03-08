@@ -5,6 +5,7 @@ import {
   PROXY_CONTENT_OPEN_POPUP,
   PROXY_CONTENT_CLOSE_POPUP,
   PROXY_CONTENT_RESIZE_POPUP,
+  PROXY_CONTENT_REFRESH_POPUP,
   BACKGROUND_SHOW_NOTIFICATION,
 } from '../messages';
 import { removeHtmlTags } from '../helpers';
@@ -32,7 +33,8 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     PROXY_CONTENT_GET_DATA,
     PROXY_CONTENT_OPEN_POPUP,
     PROXY_CONTENT_CLOSE_POPUP,
-    PROXY_CONTENT_RESIZE_POPUP
+    PROXY_CONTENT_RESIZE_POPUP,
+    PROXY_CONTENT_REFRESH_POPUP
   ];
 
   if (message.id === BACKGROUND_SHOW_NOTIFICATION) {

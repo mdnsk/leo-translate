@@ -1,15 +1,10 @@
+@import 'mixins';
+
+$theme-path: '../assets/themes/leo-translate/';
+
 .translate {
     background-color: #fff;
     border: #d7d7db 1px solid;
-}
-
-.translate__meta {
-    display: flex;
-}
-
-.translate__transcription {
-    margin-right: 5px;
-    word-wrap: break-word;
 }
 
 .translate__base-form-link {
@@ -40,13 +35,11 @@
 // TranslateHeader Component
 // ----------------------------------------------
 .translate-header {
-    display: flex;
-    justify-content: flex-end;
 }
 
-.translate-header__text {
-    margin: 3px auto 3px 0;
-    word-break: break-all;
+.translate-header__controls {
+    display: flex;
+    align-items: stretch;
 }
 
 .translate-header__btn {
@@ -55,14 +48,61 @@
     outline-color: #fff;
 }
 
-.translate-header__btn:hover {
-    background-color: #ededf0;
-    border-color: #b1b1b3;
+.translate-header__btn-refresh,
+.translate-header__btn-close,
+.translate-header__btn-play {
+    background: no-repeat center;
+    background-size: contain;
+    padding: 0;
+    font-size: 0;
+    width: 25px;
+    height: 25px;
 }
 
-.translate-header__btn_playing {
-    background-color: #e3e3e6 !important;
-    border-color: #a7a7a9 !important;
+.translate-header__btn-close {
+    background-image: url('#{$theme-path}close.svg');
+    margin-left: auto;
+
+    &:hover {
+        @include mask-svg-background('#{$theme-path}close.svg', red);
+    }
+}
+
+.translate-header__btn-refresh {
+    background-image: url('#{$theme-path}refresh.svg');
+    margin-right: 5px;
+
+    &:hover {
+        @include mask-svg-background('#{$theme-path}refresh.svg', #45a1ff);
+    }
+}
+
+.translate-header__btn-play {
+    background-image: url('#{$theme-path}play.svg');
+
+    &:hover {
+        @include mask-svg-background('#{$theme-path}play.svg', #45a1ff);
+    }
+
+    &.translate-header__btn-play_playing {
+        @include mask-svg-background('#{$theme-path}play.svg', #30e60b);
+    }
+}
+
+.translate-header__content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.translate-header__text {
+    margin: 3px auto 3px 0;
+    word-break: break-all;
+}
+
+.translate-header__transcription {
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 

@@ -4,6 +4,7 @@ export const PROXY_CONTENT_GET_DATA = 'proxy-content-get-data';
 export const PROXY_CONTENT_OPEN_POPUP = 'proxy-content-open-popup';
 export const PROXY_CONTENT_CLOSE_POPUP = 'proxy-content-close-popup';
 export const PROXY_CONTENT_RESIZE_POPUP = 'proxy-content-resize-popup';
+export const PROXY_CONTENT_REFRESH_POPUP = 'proxy-content-refresh-popup';
 
 // Messages from background to content scripts
 export const CONTENT_OPEN_POPUP = 'content-open-popup';

@@ -41,11 +41,12 @@ export default class Popup {
     return this;
   }
 
-  sendData ({ text, context }) {
+  sendData ({ text, context, frameIndex }) {
     const message = {
       id: 'content-data',
       text,
       context,
+      frameIndex,
       url: document.URL,
       title: document.title
     };

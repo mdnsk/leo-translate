@@ -2,8 +2,11 @@
   <div class="translate">
     <TranslateHeader
         :text="text"
+        :transcription="transcription"
         :sound-url="soundUrl"
+        :show-refresh="inFrame"
         @close="$emit('close')"
+        @refresh="$emit('refresh')"
     />
     <div
         v-if="isListLoading"
@@ -21,26 +24,18 @@
         v-else
         class="translate__body"
     >
-      <div class="translate__meta">
-        <div
-            v-if="transcription"
-            class="translate__transcription"
+      <div
+          v-if="dictionaryForm"
+          class="translate__base-form"
+      >
+        Dictionary form:
+        <a
+            class="translate__base-form-link"
+            href="javascript:void(0)"
+            @click.prevent="translate(wordForms[0].word)"
         >
-          [{{ transcription }}]
-        </div>
-        <div
-            v-if="dictionaryForm"
-            class="translate__base-form"
-        >
-          Dictionary form:
-          <a
-              class="translate__base-form-link"
-              href="javascript:void(0)"
-              @click.prevent="translate(wordForms[0].word)"
-          >
-            {{ dictionaryForm }}
-          </a>
-        </div>
+          {{ dictionaryForm }}
+        </a>
       </div>
       <TranslateList
           :translations="translations"
@@ -80,6 +75,12 @@
       context: {
         type: String,
         default: ''
+      },
+
+      // is the component inside of iFrame?
+      inFrame: {
+        type: Boolean,
+        default: false
       }
     },
 
