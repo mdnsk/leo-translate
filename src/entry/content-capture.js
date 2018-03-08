@@ -1,6 +1,11 @@
 import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
-import { PROXY_CONTENT_MOUSE, PROXY_CONTENT_OPEN_POPUP, PROXY_CONTENT_CLOSE_POPUP } from '../messages'
+import {
+  PROXY_CONTENT_MOUSE,
+  PROXY_CONTENT_OPEN_POPUP,
+  PROXY_CONTENT_CLOSE_POPUP,
+  PROXY_CONTENT_REFRESH_POPUP
+} from '../messages'
 
 let options = {};
 
@@ -38,6 +43,16 @@ document.body.addEventListener('dblclick', e => {
     }
   }
 
+  captureSelection();
+});
+
+chrome.runtime.onMessage.addListener(message => {
+  if (message.id === PROXY_CONTENT_REFRESH_POPUP && message.frameIndex === getSelfFrameIndex()) {
+    captureSelection();
+  }
+});
+
+function captureSelection () {
   const selection = window.getSelection();
   const text = selection.toString().trim();
 
@@ -47,7 +62,7 @@ document.body.addEventListener('dblclick', e => {
   }
 
   openPopup(text, selection);
-});
+}
 
 function closePopup () {
   sendMessage({ id: PROXY_CONTENT_CLOSE_POPUP });
@@ -93,13 +108,19 @@ function containsAnyEnglishLetter (text) {
 }
 
 function sendMessage (message) {
-  message['frameIndex'] = -1;
+  message['frameIndex'] = getSelfFrameIndex();
+
+  chrome.runtime.sendMessage(message);
+}
+
+function getSelfFrameIndex () {
+  let index = -1;
 
   for (let i = 0; i < window.top.frames.length; i++) {
     if (window.top.frames[i] === self) {
-      message['frameIndex'] = i;
+      index = i;
     }
   }
 
-  chrome.runtime.sendMessage(message);
+  return index;
 }

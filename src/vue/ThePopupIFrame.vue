@@ -5,7 +5,9 @@
       :context="context"
       :page-url="url"
       :page-title="title"
+      :in-frame="true"
       @close="close"
+      @refresh="refresh"
       @translate="translate"
       @resize="onPopupResizeListener"
   />
@@ -14,10 +16,10 @@
 <script>
   import Translate from './Translate.vue';
   import {
+    PROXY_CONTENT_GET_DATA,
     PROXY_CONTENT_CLOSE_POPUP,
     PROXY_CONTENT_RESIZE_POPUP,
-    PROXY_CONTENT_GET_DATA,
-    CONTENT_OPEN_POPUP
+    PROXY_CONTENT_REFRESH_POPUP
   } from '../messages';
 
   export default {
@@ -29,7 +31,8 @@
         url: '',
         text: '',
         title: '',
-        context: ''
+        context: '',
+        frameIndex: -1
       };
     },
 
@@ -52,6 +55,10 @@
         chrome.runtime.sendMessage({ id: PROXY_CONTENT_CLOSE_POPUP });
       },
 
+      refresh () {
+        chrome.runtime.sendMessage({ id: PROXY_CONTENT_REFRESH_POPUP, frameIndex: this.frameIndex });
+      },
+
       translate (text) {
         this.text = text;
       },
@@ -72,6 +79,7 @@
           this.text = message.data.text;
           this.title = message.data.title;
           this.context = message.data.context;
+          this.frameIndex = message.data.frameIndex;
 
           this.onPopupResizeListener();
         }

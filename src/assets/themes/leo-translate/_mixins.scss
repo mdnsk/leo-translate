@@ -1,0 +1,9 @@
+@mixin mask-svg-background ($svg, $bg-color) {
+  background-color: $bg-color;
+  background-image: none;
+
+  -webkit-mask: url($svg) center no-repeat;
+  mask: url($svg) center no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}

@@ -68,7 +68,8 @@ module.exports = {
     })
   ],
   node: {
-    global: false
+    global: false,
+    setImmediate: false
   }
 }
 
