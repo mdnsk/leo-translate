@@ -20,7 +20,7 @@
       </button>
       <button
           class="translate-header__btn translate-header__btn-close"
-          @click="$emit('close')"
+          @click="close"
       >
         X
       </button>
@@ -86,6 +86,12 @@
     },
 
     methods: {
+      close (e) {
+        this.$emit('close');
+
+        e.target.blur();
+      },
+
       play () {
         this.player().play();
       },

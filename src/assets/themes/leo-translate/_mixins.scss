@@ -1,9 +1,29 @@
-@mixin mask-svg-background ($svg, $bg-color) {
-  background-color: $bg-color;
-  background-image: none;
+@mixin svg-background ($svg) {
+  position: relative;
+  border: 0;
 
-  -webkit-mask: url($svg) center no-repeat;
-  mask: url($svg) center no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left:0;
+
+    background: url($svg) no-repeat center;
+    background-size: contain;
+  }
+}
+
+@mixin svg-mask ($svg, $bg-color) {
+  &::after {
+    background-color: $bg-color;
+    background-image: none;
+
+    -webkit-mask: url($svg) center no-repeat;
+    mask: url($svg) center no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    mask-border: none;
+  }
 }

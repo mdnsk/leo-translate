@@ -7,7 +7,11 @@
 .the-browser-action__search {
   width: 100%;
   padding: 15px;
-  border: none;
+  border: 2px solid white;
+
+  &:focus {
+    border: 2px solid #45a1ff;
+  }
 }
 
 .the-browser-action__translate {
