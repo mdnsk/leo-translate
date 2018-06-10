@@ -9,11 +9,8 @@
         Refresh
       </button>
       <button
-          :class="{
-            'translate-header__btn': true,
-            'translate-header__btn-play': true,
-            'translate-header__btn-play_playing': isPlaying
-          }"
+          class="translate-header__btn translate-header__btn-play"
+          :class="{ 'translate-header__btn-play_playing': isPlaying }"
           @click="play"
       >
         Play
