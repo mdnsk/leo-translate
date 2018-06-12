@@ -5,7 +5,7 @@ export const defaultValues = Object.freeze({
   doubleClickCtrl:  false,
   doubleClickAlt:   false,
   doubleClickMeta:  false,
-  theme:            'leo-translate',
+  theme:            'blackberry',
   audioAutoPlay:    false
 });
 
