@@ -13,7 +13,7 @@ export default class Popup {
       display: 'none',
       border: 'none',
       zIndex: 10000,
-      boxShadow: '0 0 1px 0',
+      boxShadow: '0 0 4px 0',
       width: this.WIDTH+'px',
       height: '67px',
       padding: 0,
