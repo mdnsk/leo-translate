@@ -14,6 +14,10 @@
   }
 }
 
+.the-browser-action__clear-search {
+  display: none;
+}
+
 .the-browser-action__translate {
   padding: 3px;
 }
@@ -29,6 +33,7 @@
   margin: 0;
   word-break: break-all;
 }
+
 .the-browser-action__history-meanings {
   flex: 0 0 60%;
   max-width: 60%;

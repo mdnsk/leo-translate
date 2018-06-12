@@ -1,0 +1,39 @@
+body {
+  font-family: "Segoe UI", "San Francisco", Ubuntu, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.btn {
+  padding: 0 15px;
+  height: 30px;
+  border: 1px #7a29cc solid;
+  border-radius: 15px;
+  background-color: transparent;
+  color: #7a29cc;
+
+  &:hover {
+    background: #7a29cc;
+    color: #fff;
+  }
+
+  &:disabled {
+    color: #cdcccb;
+    border-color: #cdcccb;
+    background: transparent;
+  }
+}
+
+.button-link {
+  display: inline-block;
+  text-decoration: underline dotted;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #7a29cc;
+  cursor: pointer;
+}

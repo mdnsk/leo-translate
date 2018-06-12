@@ -88,8 +88,10 @@
   };
 </script>
 
-<style>
-  .the-popup-iframe {
-    padding: 3px;
+<style lang="scss">
+  .theme-leo-translate {
+    .the-popup-iframe {
+      padding: 3px;
+    }
   }
 </style>

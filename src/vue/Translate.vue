@@ -211,4 +211,9 @@
     @import "../assets/themes/leo-translate/style.scss";
     @import "../assets/themes/leo-translate/popup.scss";
   }
+
+  .theme-blackberry {
+    @import "../assets/themes/blackberry/style.scss";
+    @import "../assets/themes/blackberry/popup.scss";
+  }
 </style>

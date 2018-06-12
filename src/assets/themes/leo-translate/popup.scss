@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '../mixins';
 
 $theme-path: '../assets/themes/leo-translate/';
 
@@ -58,32 +58,38 @@ $theme-path: '../assets/themes/leo-translate/';
 }
 
 .translate-header__btn-close {
-    @include svg-background('#{$theme-path}close.svg');
     margin-left: auto;
+    position: relative;
+
+    @include svg-background('#{$theme-path}leo-translate-close.svg');
 
     &:hover, &:focus {
-        @include svg-mask('#{$theme-path}close.svg', red);
+        @include svg-mask('#{$theme-path}leo-translate-close.svg', red);
     }
 }
 
 .translate-header__btn-refresh {
-    @include svg-background('#{$theme-path}refresh.svg');
+    position: relative;
     margin-right: 5px;
 
+    @include svg-background('#{$theme-path}leo-translate-refresh.svg');
+
     &:hover, &:focus {
-        @include svg-mask('#{$theme-path}refresh.svg', #45a1ff);
+        @include svg-mask('#{$theme-path}leo-translate-refresh.svg', #45a1ff);
     }
 }
 
 .translate-header__btn-play {
-    @include svg-background('#{$theme-path}play.svg');
+    position: relative;
+
+    @include svg-background('#{$theme-path}leo-translate-play.svg');
 
     &:hover, &:focus {
-        @include svg-mask('#{$theme-path}play.svg', #45a1ff);
+        @include svg-mask('#{$theme-path}leo-translate-play.svg', #45a1ff);
     }
 
     &.translate-header__btn-play_playing {
-        @include svg-mask('#{$theme-path}play.svg', #30e60b);
+        @include svg-mask('#{$theme-path}leo-translate-play.svg', #30e60b);
         box-shadow: none;
     }
 }

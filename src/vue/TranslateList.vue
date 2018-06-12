@@ -11,17 +11,16 @@
             class="translate-list__rating"
             :style="{width: trans.rating+'%'}"
         ></div>
-        {{ trans.value }}
-      </li>
-      <li class="translate-list__item">
-        <input
-            class="translate-list__add-meaning"
-            type="text"
-            placeholder="Type meaning and press Enter"
-            @keyup.enter="onEnterMeaningListener"
-        >
+        <div class="translate-list__item-value">{{ trans.value }}</div>
       </li>
     </ul>
+
+    <input
+        class="translate-list__add-meaning"
+        type="text"
+        placeholder="Type meaning and press Enter"
+        @keyup.enter="onEnterMeaningListener"
+    >
 
     <div
         v-if="isMeaningAdding"

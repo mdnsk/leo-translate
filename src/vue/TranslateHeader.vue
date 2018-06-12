@@ -4,6 +4,7 @@
       <button
               v-if="showRefresh"
               class="translate-header__btn translate-header__btn-refresh"
+              title="Refresh"
               @click="$emit('refresh')"
       >
         Refresh
@@ -11,12 +12,14 @@
       <button
           class="translate-header__btn translate-header__btn-play"
           :class="{ 'translate-header__btn-play_playing': isPlaying }"
+          title="Play sound"
           @click="play"
       >
         Play
       </button>
       <button
           class="translate-header__btn translate-header__btn-close"
+          title="Close"
           @click="close"
       >
         X
@@ -29,7 +32,7 @@
       ></audio>
     </div>
     <div class="translate-header__content">
-      <h1 class="translate-header__text">{{ text }}</h1>
+      <h1 class="translate-header__text">{{ text | capitalize }}</h1>
       <div v-if="transcription" class="translate-header__transcription">[{{ transcription }}]</div>
     </div>
   </div>
@@ -39,6 +42,20 @@
   import options from '../options';
 
   export default {
+    filters: {
+      capitalize (val) {
+        if (val.length < 1) {
+          return '';
+        }
+
+        if (val.length === 1) {
+          return val.toUpperCase();
+        }
+
+        return val.charAt(0).toUpperCase()+val.slice(1);
+      }
+    },
+
     props: {
       text: String,
       transcription: String,

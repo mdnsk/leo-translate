@@ -3,8 +3,9 @@
     <input
         class="the-browser-action__search"
         v-model="input"
-        placeholder="Type text to translate..."
+        placeholder="Type a word to translate..."
     >
+    <button v-if="input.length > 0" class="the-browser-action__clear-search" type="button" @click="close">X</button>
     <translate
         v-show="showTranslate"
         :text="text"
@@ -14,23 +15,19 @@
         @close="close"
         @translate="translate"
     />
-    <ul v-show="hasHistory && ! showTranslate">
-      <li
-          v-for="item in history"
-          class="the-browser-action__history-item"
-      >
-        <a :href="getHistoryWordUrl(item.word)" class="the-browser-action__history-link">{{ item.word }}</a>
+    <ul v-show="hasHistory && ! showTranslate" class="the-browser-action__history-list">
+      <li v-for="item in history" class="the-browser-action__history-item">
+        <a :href="getHistoryWordUrl(item.word)" class="the-browser-action__history-link">
+          <span>{{ item.word }}</span>
+        </a>
         <p class="the-browser-action__history-meanings">{{ item.meanings.join(', ') }}</p>
       </li>
     </ul>
     <div v-show="! showTranslate" class="the-browser-action__controls">
-      <button
-          :disabled="! hasHistory"
-          @click="clearHistory"
-      >
+      <button class="btn" type="button" :disabled="! hasHistory" @click="clearHistory">
         Clear history
       </button>
-      <button @click="openOptionsPage">
+      <button class="btn" type="button" @click="openOptionsPage">
         Settings
       </button>
     </div>
@@ -139,5 +136,10 @@
   .theme-leo-translate {
     @import "../assets/themes/leo-translate/style.scss";
     @import "../assets/themes/leo-translate/browser-action.scss";
+  }
+
+  .theme-blackberry {
+    @import "../assets/themes/blackberry/style.scss";
+    @import "../assets/themes/blackberry/browser-action.scss";
   }
 </style>

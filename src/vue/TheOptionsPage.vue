@@ -55,6 +55,7 @@
         Theme
         <select name="theme" v-model="options.theme">
           <option value="leo-translate">LeoTranslate</option>
+          <option value="blackberry">Blackberry</option>
         </select>
       </label>
 
