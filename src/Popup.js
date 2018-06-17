@@ -80,10 +80,21 @@ export default class Popup {
 
     const popupHeight = this.createPopup().offsetHeight + this.MARGIN_Y;
     const pageWidth = window.document.documentElement.clientWidth + window.scrollX + bodyOffset.left;
-    const pageHeight = window.document.documentElement.clientHeight + window.scrollY + bodyOffset.top;
+    const pageHeight = window.scrollY + bodyOffset.top;
 
     const x = left + this.WIDTH > pageWidth ? pageWidth - this.WIDTH : left;
-    const y = bottom + popupHeight > pageHeight && top - popupHeight > 0 ? top - popupHeight : bottom + this.MARGIN_Y;
+
+        // if popup does not fit to viewport at bottom
+    const y = bottom + popupHeight > pageHeight + window.document.documentElement.clientHeight
+
+        // and if popup does fit to viewport at top
+        && top - popupHeight > pageHeight
+
+        // or if popup does not fit to page at bottom
+        || bottom + popupHeight > document.body.scrollHeight + bodyOffset.top
+
+      ? top - popupHeight
+      : bottom + this.MARGIN_Y;
 
     this.popup.style.top = y+'px';
     this.popup.style.left = x+'px';
