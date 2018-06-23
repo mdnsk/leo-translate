@@ -9,8 +9,6 @@
  * @returns {null|Range}
  */
 export function getWordFromCaretPosition ({ offsetNode, offset }, x, y) {
-  console.log(offsetNode, offset, x, y);
-
   if (offsetNode.nodeType !== Node.TEXT_NODE) {
     return null;
   }
