@@ -6,17 +6,15 @@
       <h3>Context Capturing</h3>
       <label>
         <input
-            name="context-capturing"
             v-model="options.contextCapturing"
             type="checkbox"
         >
-        Enable Context Capturing (This is an experimental feature)
+        Enable Context Capturing
       </label>
 
       <h3>Double Click Translation</h3>
       <label>
         <input
-            name="double-click"
             v-model="options.doubleClick"
             type="checkbox"
         >
@@ -24,7 +22,6 @@
       </label>
       <label class="dependent-option">
         <input
-            name="double-click-ctrl"
             v-model="options.doubleClickCtrl"
             type="checkbox"
             :disabled="!options.doubleClick"
@@ -33,7 +30,6 @@
       </label>
       <label class="dependent-option">
         <input
-            name="double-click-alt"
             v-model="options.doubleClickAlt"
             type="checkbox"
             :disabled="!options.doubleClick"
@@ -42,7 +38,6 @@
       </label>
       <label class="dependent-option">
         <input
-            name="double-click-meta"
             v-model="options.doubleClickMeta"
             type="checkbox"
             :disabled="!options.doubleClick"
@@ -50,10 +45,27 @@
         Only with Cmd (OSX) or Windows key.
       </label>
 
+      <h3>Mouse Hover Translation</h3>
+      <label>
+        <input v-model="options.hoverTranslation" type="checkbox">
+        Enable Mouse Hover Translation
+      </label>
+      <label>
+        Timeout
+        <input
+            v-model="options.hoverTimeout"
+            type="number"
+            step="100"
+            min="100"
+            max="5000"
+            :disabled="!options.hoverTranslation"
+        >
+      </label>
+
       <h3>Appearance</h3>
       <label>
         Theme
-        <select name="theme" v-model="options.theme">
+        <select v-model="options.theme">
           <option value="leo-translate">LeoTranslate</option>
           <option value="blackberry">Blackberry</option>
         </select>
@@ -62,9 +74,8 @@
       <h3>Audio</h3>
       <label>
         <input
-                name="audio-auto-play"
-                v-model="options.audioAutoPlay"
-                type="checkbox"
+            v-model="options.audioAutoPlay"
+            type="checkbox"
         >
         Play audio automatically.
       </label>
@@ -84,6 +95,8 @@
           doubleClickCtrl:  null,
           doubleClickAlt:   null,
           doubleClickMeta:  null,
+          hoverTranslation: null,
+          hoverTimeout:     null,
           theme:            null,
           audioAutoPlay:    null
         },

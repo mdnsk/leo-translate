@@ -57,9 +57,8 @@ export default class Extractor {
   /**
    * Init all the class properties.
    */
-  constructor (selection) {
-    this.selection = selection;
-    this.range = this.selection.rangeCount < 1 ? null : this.selection.getRangeAt(0);
+  constructor (range) {
+    this.range = range;
   }
 
   /**
@@ -118,7 +117,7 @@ export default class Extractor {
 
     const getSiblingElement = element => {
       return direction === Extractor.BACKWARD_DIRECTION ? element.previousSibling : element.nextSibling;
-    }
+    };
 
     if ([Extractor.BACKWARD_DIRECTION, Extractor.FORWARD_DIRECTION].indexOf(direction) === -1) {
       throw new Error('Invalid direction "'+direction+'"');

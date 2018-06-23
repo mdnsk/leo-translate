@@ -1,10 +1,12 @@
-// Declare default values for the options.
+// Declare default values for options.
 export const defaultValues = Object.freeze({
   contextCapturing: false,
   doubleClick:      true,
   doubleClickCtrl:  false,
   doubleClickAlt:   false,
   doubleClickMeta:  false,
+  hoverTranslation: false,
+  hoverTimeout:     300,
   theme:            'blackberry',
   audioAutoPlay:    false
 });

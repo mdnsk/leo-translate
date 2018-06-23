@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(message => {
     if (checkSelectionLength(message.text)) {
       // Apply body offset to received coordinates.
       // We need if because the popup is placed inside the body element.
-      const rectBody = getBodyOffset()
+      const rectBody = getBodyOffset();
 
       data = {
         context: message.context,

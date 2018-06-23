@@ -1,5 +1,5 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -71,10 +71,10 @@ module.exports = {
     global: false,
     setImmediate: false
   }
-}
+};
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = false
+  module.exports.devtool = false;
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
@@ -91,5 +91,5 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
-  ])
-};
+  ]);
+}

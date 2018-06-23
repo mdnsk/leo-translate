@@ -1,5 +1,6 @@
 import optionsStorage from '../options';
 import ContextExtractor from '../ContextExtractor';
+import { getWordFromCaretPosition } from '../rangeHelpers';
 import {
   PROXY_CONTENT_MOUSE,
   PROXY_CONTENT_OPEN_POPUP,
@@ -10,9 +11,16 @@ import {
 let options = {};
 
 // Fetch options from local storage
-optionsStorage.getAllOptions().then(data => options = data);
+optionsStorage.getAllOptions().then(data => {
+  options = data;
 
-document.body.addEventListener('mousedown', e => {
+  // Add Translate on MouseOver handler
+  if (options.hoverTranslation) {
+    document.body.addEventListener('mousemove', onHoverTranslationHandler);
+  }
+});
+
+document.body.addEventListener('mousedown', function (e) {
   // If left button clicked, close popup
   if (e.button === 0) {
     closePopup();
@@ -28,7 +36,7 @@ document.body.addEventListener('mousedown', e => {
   }
 });
 
-document.body.addEventListener('dblclick', e => {
+document.body.addEventListener('dblclick', function (e) {
   // Do nothing if dblclick handling is disabled.
   if (! options.doubleClick) {
     return;
@@ -46,7 +54,7 @@ document.body.addEventListener('dblclick', e => {
   captureSelection();
 });
 
-chrome.runtime.onMessage.addListener(message => {
+chrome.runtime.onMessage.addListener(function (message) {
   if (message.id === PROXY_CONTENT_REFRESH_POPUP && message.frameIndex === getSelfFrameIndex()) {
     captureSelection();
   }
@@ -61,34 +69,34 @@ function captureSelection () {
     return;
   }
 
-  openPopup(text, selection);
+  if (selection.rangeCount > 0) {
+    openPopup(text, selection.getRangeAt(0));
+  }
 }
 
 function closePopup () {
   sendMessage({ id: PROXY_CONTENT_CLOSE_POPUP });
 }
 
-function openPopup (text, selection) {
-  if (selection.rangeCount > 0) {
-    const rect = selection.getRangeAt(0).getBoundingClientRect();
+function openPopup (text, range) {
+  const rect = range.getBoundingClientRect();
 
-    const message = {
-      id: PROXY_CONTENT_OPEN_POPUP,
-      text,
-      context: '',
-      rect: {
-        top: rect.top,
-        bottom: rect.bottom,
-        left: rect.left
-      }
-    };
-
-    if (options.contextCapturing) {
-      message.context = new ContextExtractor(selection).getContext().getSentence();
+  const message = {
+    id: PROXY_CONTENT_OPEN_POPUP,
+    text,
+    context: '',
+    rect: {
+      top: rect.top,
+      bottom: rect.bottom,
+      left: rect.left
     }
+  };
 
-    sendMessage(message);
+  if (options.contextCapturing) {
+    message.context = new ContextExtractor(range).getContext().getSentence();
   }
+
+  sendMessage(message);
 }
 
 function isAltClick (e) {
@@ -123,4 +131,19 @@ function getSelfFrameIndex () {
   }
 
   return index;
+}
+
+let onHoverTranslationTimer;
+
+function onHoverTranslationHandler (e) {
+  clearTimeout(onHoverTranslationTimer);
+
+  onHoverTranslationTimer = setTimeout(function () {
+    const range = getWordFromCaretPosition(document.caretPositionFromPoint(e.x, e.y), e.x, e.y);
+    const text = range !== null ? range.toString() : null;
+
+    if (text !== null && text.length > 0) {
+      openPopup(text, range);
+    }
+  }, options.hoverTimeout);
 }
