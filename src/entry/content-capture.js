@@ -1,5 +1,6 @@
-import optionsStorage from '../options';
+import optionsStorage from '../storage/options';
 import ContextExtractor from '../ContextExtractor';
+import hoverExcluded from '../storage/hoverExcluded';
 import { getWordFromCaretPosition } from '../rangeHelpers';
 import {
   PROXY_CONTENT_MOUSE,
@@ -11,8 +12,8 @@ import {
 
 let options = {};
 
-// Fetch options from local storage
-optionsStorage.getAllOptions().then(onGetAllOptionsListener);
+// Fetch options and sites excluded from global hover translation settings from local storage
+loadOptionsAndHoverExcluded();
 
 document.body.addEventListener('mousedown', onMousedownListener);
 document.body.addEventListener('dblclick', onDblclickListener);
@@ -22,11 +23,11 @@ chrome.runtime.onMessage.addListener(onRuntimeMessageEventListener);
 
 // Event Listeners
 
-function onGetAllOptionsListener (data) {
-  options = data;
+function onGetAllOptionsAndHoverExcludedListener ([ newOptions, excludedHosts ]) {
+  options = newOptions;
 
   // Is this host excluded from global hover translation settings?
-  let hostExcluded = Array.isArray(options.hoverExclude) && options.hoverExclude.indexOf(window.location.host) !== -1;
+  let hostExcluded = Array.isArray(excludedHosts) && excludedHosts.indexOf(window.location.host) !== -1;
 
   // Add Translate on MouseOver handler
   if (options.hoverTranslation && !hostExcluded || !options.hoverTranslation && hostExcluded) {
@@ -74,8 +75,8 @@ function onRuntimeMessageEventListener (message) {
   if (message.id === PROXY_CONTENT_REFRESH_POPUP && message.frameIndex === getSelfFrameIndex()) {
     captureSelection();
   } else if (message.id === PROXY_ALL_CONTENT_REFRESH_OPTIONS) {
-    // Reload options
-    optionsStorage.getAllOptions().then(onGetAllOptionsListener);
+    // Reload options and list of sites which are excluded from global hover translation settings
+    loadOptionsAndHoverExcluded();
   }
 }
 
@@ -168,4 +169,8 @@ function getSelfFrameIndex () {
   }
 
   return index;
+}
+
+function loadOptionsAndHoverExcluded () {
+  Promise.all([ optionsStorage.getAllOptions(), hoverExcluded.getAll() ]).then(onGetAllOptionsAndHoverExcludedListener);
 }

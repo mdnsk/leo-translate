@@ -53,6 +53,6 @@ export default {
   },
 
   clear () {
-    return chrome.storage.local.set({history: []});
+    return chrome.storage.local.set({ history: [] });
   }
 };

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import options from '../options';
+  import options from '../storage/options';
 
   export default {
     filters: {

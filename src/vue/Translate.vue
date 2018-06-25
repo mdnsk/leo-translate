@@ -52,7 +52,7 @@
 
 <script>
   import api from '../leoApi';
-  import history from '../history';
+  import history from '../storage/history';
   import TranslateList from './TranslateList.vue';
   import TranslateHeader from './TranslateHeader.vue';
   import TranslateContext from './TranslateContext.vue';

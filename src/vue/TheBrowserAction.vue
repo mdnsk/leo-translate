@@ -45,9 +45,10 @@
 <script>
   import api from '../leoApi';
   import debounce from 'debounce';
-  import history from '../history';
-  import options from '../options';
   import Translate from './Translate.vue';
+  import history from '../storage/history';
+  import options from '../storage/options';
+  import hoverExcluded from '../storage/hoverExcluded';
   import {
     BACKGROUND_GET_CURRENT_HOST,
     BROWSER_ACTION_CURRENT_HOST,
@@ -63,17 +64,16 @@
         input: '',
         history: [],
 
-        // Hover mode (for this site only)
-        hoverMode: false,
-        currentHost: '',
+        // Host name of the current active page
+        currentHost: null,
+
+        // Sites for which on hover translate settings are inverted.
+        hoverExcluded: [],
 
         // Global hover Translation setting
         globalHoverTranslation: false
       };
     },
-
-    // Sites for which on hover translate settings are inverted.
-    hoverExclude: [],
 
     computed: {
       showTranslate () {
@@ -82,6 +82,12 @@
 
       hasHistory () {
         return this.history.length > 0;
+      },
+
+      // Return globalHoverTranslation setting or invert it if this site is excluded
+      hoverMode () {
+        return this.hoverExcluded.indexOf(this.currentHost) >= 0
+          ? !this.globalHoverTranslation : this.globalHoverTranslation;
       }
     },
 
@@ -99,8 +105,11 @@
       chrome.storage.onChanged.addListener(this.changeHistoryListener);
       chrome.runtime.onMessage.addListener(this.onMessageListener);
 
-      this.loadOptions();
       this.loadHistory();
+
+      // Request URL of the current active tab
+      Promise.all([ this.loadOptions(), this.loadHoverExcluded() ])
+        .then(() => chrome.runtime.sendMessage({ id: BACKGROUND_GET_CURRENT_HOST }));
 
       setTimeout(this.focus, 150);
       setTimeout(this.focus, 500);
@@ -126,13 +135,11 @@
       },
 
       loadOptions () {
-        options.getAllOptions().then(values => {
-          this.globalHoverTranslation = values.hoverTranslation;
-          this.$options.hoverExclude = Array.isArray(values.hoverExclude) ? values.hoverExclude : [];
+        return options.getAllOptions().then(values => this.globalHoverTranslation = values.hoverTranslation);
+      },
 
-          // Request URL of the current active tab
-          chrome.runtime.sendMessage({ id: BACKGROUND_GET_CURRENT_HOST });
-        });
+      loadHoverExcluded () {
+        return hoverExcluded.getAll().then(excluded => this.hoverExcluded = excluded);
       },
 
       changeHistoryListener (changes, area) {
@@ -143,12 +150,6 @@
 
       onMessageListener (message) {
         if (message.id === BROWSER_ACTION_CURRENT_HOST) {
-
-          // Set hoverMode to globalHoverTranslation setting or invert it if this site is excluded
-          this.hoverMode = this.$options.hoverExclude.indexOf(message.host) >= 0
-            ? !this.globalHoverTranslation
-            : this.globalHoverTranslation;
-
           this.currentHost = message.host;
         }
       },
@@ -171,20 +172,17 @@
 
       toggleHoverMode () {
         if (this.currentHost !== '') {
-          const index = this.$options.hoverExclude.indexOf(this.currentHost);
+          const index = this.hoverExcluded.indexOf(this.currentHost);
 
           if (index === -1) {
-            this.$options.hoverExclude.push(this.currentHost);
+            this.hoverExcluded.push(this.currentHost);
           } else {
-            this.$options.hoverExclude.splice(index, 1);
+            this.hoverExcluded.splice(index, 1);
           }
 
-          options.setOption('hoverExclude', this.$options.hoverExclude)
-            .then(() => {
-              this.loadOptions();
-
-              chrome.runtime.sendMessage({ id: PROXY_ALL_CONTENT_REFRESH_OPTIONS });
-            });
+          hoverExcluded.setAll(this.hoverExcluded).then(() => {
+            chrome.runtime.sendMessage({ id: PROXY_ALL_CONTENT_REFRESH_OPTIONS });
+          });
         }
       },
 

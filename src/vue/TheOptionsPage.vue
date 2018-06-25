@@ -91,7 +91,8 @@
 </template>
 
 <script>
-  import options from '../options';
+  import options from '../storage/options';
+  import hoverExcluded from '../storage/hoverExcluded';
   import { PROXY_ALL_CONTENT_REFRESH_OPTIONS } from '../messages';
 
   export default {
@@ -105,7 +106,6 @@
           doubleClickMeta:  null,
           hoverTranslation: null,
           hoverTimeout:     null,
-          hoverExclude:     [],
           theme:            null,
           audioAutoPlay:    null
         },
@@ -161,10 +161,7 @@
 
       // Clear excluded sites list if hoverTranslation was changed
       onHoverTranslationChanged (e) {
-        this.options = Object.assign({}, this.options, {
-          hoverTranslation: e.target.checked,
-          hoverExclude: []
-        });
+        hoverExcluded.clear().then(() => this.options.hoverTranslation = e.target.checked);
       }
     }
   };

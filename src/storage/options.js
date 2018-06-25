@@ -13,10 +13,6 @@ export const defaultValues = Object.freeze({
   hoverTranslation: false,
   hoverTimeout:     300,
 
-  // Sites for those global hover translation settings are inverted
-  // For example, if hover translation enabled for all sites, for these sites it is disabled.
-  hoverExclude:     [],
-
   // Theme (css files)
   theme:            'blackberry',
 
