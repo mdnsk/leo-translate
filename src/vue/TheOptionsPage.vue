@@ -38,7 +38,7 @@
             type="checkbox"
             :disabled="!options.doubleClick"
         >
-        <label for="doubleClickMeta">Only with Alt key.</label>
+        <label for="doubleClickAlt">Only with Alt key.</label>
       </div>
       <div class="dependent-option browser-style">
         <input
