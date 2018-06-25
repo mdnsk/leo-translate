@@ -11,9 +11,6 @@ import {
 
 let options = {};
 
-// Is this host excluded from global hover translation settings?
-let hostExcluded = false;
-
 // Fetch options from local storage
 optionsStorage.getAllOptions().then(onGetAllOptionsListener);
 
@@ -27,7 +24,9 @@ chrome.runtime.onMessage.addListener(onRuntimeMessageEventListener);
 
 function onGetAllOptionsListener (data) {
   options = data;
-  hostExcluded = Array.isArray(options.hoverExclude) && options.hoverExclude.indexOf(window.location.host) !== -1;
+
+  // Is this host excluded from global hover translation settings?
+  let hostExcluded = Array.isArray(options.hoverExclude) && options.hoverExclude.indexOf(window.location.host) !== -1;
 
   // Add Translate on MouseOver handler
   if (options.hoverTranslation && !hostExcluded || !options.hoverTranslation && hostExcluded) {
