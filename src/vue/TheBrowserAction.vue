@@ -171,21 +171,18 @@
 
       toggleHoverMode () {
         if (this.currentHost !== '') {
-          this.hoverMode = !this.hoverMode;
+          const index = this.$options.hoverExclude.indexOf(this.currentHost);
 
-          if (this.hoverMode) {
+          if (index === -1) {
             this.$options.hoverExclude.push(this.currentHost);
           } else {
-            const index = this.$options.hoverExclude.indexOf(this.currentHost);
-
-            if (index !== -1) {
-              this.$options.hoverExclude.splice(index, 1);
-            }
+            this.$options.hoverExclude.splice(index, 1);
           }
 
-          options.setAllOptions({ hoverExclude: this.$options.hoverExclude })
+          options.setOption('hoverExclude', this.$options.hoverExclude)
             .then(() => {
               this.loadOptions();
+
               chrome.runtime.sendMessage({ id: PROXY_ALL_CONTENT_REFRESH_OPTIONS });
             });
         }

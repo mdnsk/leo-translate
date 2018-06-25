@@ -59,6 +59,18 @@ export default {
     });
   },
 
+  setOption (key, val) {
+    return this.getAllOptions().then(options => {
+      if (options[key] === undefined) {
+        throw new Error('Undefined option '+key);
+      }
+
+      options[key] = val;
+
+      return this.setAllOptions(options);
+    });
+  },
+
   /**
    * Set all options
    *

@@ -17,8 +17,9 @@
       <div class="browser-style">
         <input
             id="doubleClick"
-            v-model="options.doubleClick"
             type="checkbox"
+            :checked="options.doubleClick"
+            @change="onDoubleClickChanged"
         >
         <label for="doubleClick">Double click to translate</label>
       </div>
@@ -52,7 +53,12 @@
 
       <h3>Mouse Hover Translation</h3>
       <div class="browser-style">
-        <input id="hoverTranslation" v-model="options.hoverTranslation" type="checkbox">
+        <input
+          id="hoverTranslation"
+          type="checkbox"
+          :checked="options.hoverTranslation"
+          @change="onHoverTranslationChanged"
+        >
         <label for="hoverTranslation">Enable on hover translation for all sites</label>
       </div>
       <label>
@@ -118,17 +124,6 @@
           this.saveOptions();
         },
         deep: true
-      },
-
-      // Set dependent options to false
-      'options.doubleClick': function (val) {
-        if (! val) {
-          this.options = Object.assign({}, this.options, {
-            doubleClickAlt: false,
-            doubleClickCtrl: false,
-            doubleClickMeta: false
-          });
-        }
       }
     },
 
@@ -146,6 +141,30 @@
 
       loadOptions () {
         options.getAllOptions().then(options => this.options = options);
+      },
+
+      // Set dependent options to false
+      onDoubleClickChanged (e) {
+        const values = {
+          doubleClick: e.target.checked
+        };
+
+        // Set dependent options to false
+        if (! e.target.checked) {
+          values['doubleClickAlt'] = false;
+          values['doubleClickCtrl'] = false;
+          values['doubleClickMeta'] = false;
+        }
+
+        this.options = Object.assign({}, this.options, values);
+      },
+
+      // Clear excluded sites list if hoverTranslation was changed
+      onHoverTranslationChanged (e) {
+        this.options = Object.assign({}, this.options, {
+          hoverTranslation: e.target.checked,
+          hoverExclude: []
+        });
       }
     }
   };
