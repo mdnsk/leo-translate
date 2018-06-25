@@ -43,6 +43,8 @@
 }
 
 .the-browser-action__controls {
-  text-align: center;
   margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }

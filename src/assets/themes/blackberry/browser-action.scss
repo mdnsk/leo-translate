@@ -47,6 +47,7 @@ $theme-path: '../assets/themes/blackberry/';
   padding: 20px 0;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 
   .btn {
     margin-right: 10px;
@@ -54,6 +55,17 @@ $theme-path: '../assets/themes/blackberry/';
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+
+.the-browser-action__hover-mode-checkbox {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  color: #cdcccb;
+
+  &.the-browser-action__hover-mode-checkbox_active {
+    color: #7a29cc;
   }
 }
 

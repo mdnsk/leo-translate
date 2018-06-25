@@ -16,15 +16,18 @@ export function getWordFromCaretPosition ({ offsetNode, offset }, x, y) {
   let startOffset, endOffset;
   const range = document.createRange();
 
-  for (startOffset = offset > 0 ? offset - 1 : 0; startOffset > 0; startOffset--) {
-    if (! checkIfWordChar(offsetNode.nodeValue[startOffset])) {
-      startOffset++;
-      break;
-    }
-  }
+  // Find the start of the word
+  for (
+    startOffset = offset;
+    startOffset > 0
+      && isWordChar(offsetNode.nodeValue[startOffset])
+      && isWordChar(offsetNode.nodeValue[startOffset - 1]);
+    startOffset--
+  ) {}
 
+  // Find the end of the word
   for (endOffset = offset; endOffset < offsetNode.nodeValue.length; endOffset++) {
-    if (! checkIfWordChar(offsetNode.nodeValue[endOffset])) {
+    if (! isWordChar(offsetNode.nodeValue[endOffset])) {
       break;
     }
   }
@@ -47,6 +50,6 @@ export function getWordFromCaretPosition ({ offsetNode, offset }, x, y) {
  *
  * @return boolean
  */
-function checkIfWordChar(char) {
+function isWordChar(char) {
   return /[a-zA-Z-']/.test(char);
 }

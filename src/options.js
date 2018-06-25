@@ -1,13 +1,26 @@
 // Declare default values for options.
 export const defaultValues = Object.freeze({
+  // Enable context capturing
   contextCapturing: false,
+
+  // Double Click Translation settings
   doubleClick:      true,
   doubleClickCtrl:  false,
   doubleClickAlt:   false,
   doubleClickMeta:  false,
+
+  // Enable hover translation for all sites
   hoverTranslation: false,
   hoverTimeout:     300,
+
+  // Sites for those global hover translation settings are inverted
+  // For example, if hover translation enabled for all sites, for these sites it is disabled.
+  hoverExclude:     [],
+
+  // Theme (css files)
   theme:            'blackberry',
+
+  // Play sound automatically for translated word
   audioAutoPlay:    false
 });
 
@@ -16,15 +29,6 @@ function getOptionValue (options, key) {
 }
 
 export default {
-  /**
-   * Set all options
-   *
-   * @param options
-   */
-  setAllOptions (options) {
-    return chrome.storage.local.set({ options });
-  },
-
   /**
    * Return option by key
    *
@@ -53,5 +57,14 @@ export default {
         return resolve(options);
       })
     });
+  },
+
+  /**
+   * Set all options
+   *
+   * @param options
+   */
+  setAllOptions (options) {
+    return new Promise(resolve => chrome.storage.local.set({ options }, resolve));
   }
 };

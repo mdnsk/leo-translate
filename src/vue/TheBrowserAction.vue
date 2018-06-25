@@ -23,14 +23,22 @@
         <p class="the-browser-action__history-meanings">{{ item.meanings.join(', ') }}</p>
       </li>
     </ul>
-    <div v-show="! showTranslate" class="the-browser-action__controls">
-      <button class="btn" type="button" :disabled="! hasHistory" @click="clearHistory">
-        Clear history
-      </button>
-      <button class="btn" type="button" @click="openOptionsPage">
-        Settings
-      </button>
-    </div>
+    <template v-show="! showTranslate">
+      <div class="the-browser-action__controls">
+        <button class="btn" type="button" :disabled="! hasHistory" @click="clearHistory">
+          Clear history
+        </button>
+        <button class="btn" type="button" @click="openOptionsPage">
+          Settings
+        </button>
+        <label class="the-browser-action__hover-mode-checkbox" :class="{
+          'the-browser-action__hover-mode-checkbox_active': hoverMode
+        }">
+          <input type="checkbox" :checked="hoverMode" @change="toggleHoverMode">
+          Enable on hover translation for this site
+        </label>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -38,7 +46,13 @@
   import api from '../leoApi';
   import debounce from 'debounce';
   import history from '../history';
+  import options from '../options';
   import Translate from './Translate.vue';
+  import {
+    BACKGROUND_GET_CURRENT_HOST,
+    BROWSER_ACTION_CURRENT_HOST,
+    PROXY_ALL_CONTENT_REFRESH_OPTIONS
+  } from '../messages';
 
   export default {
     components: { Translate },
@@ -47,9 +61,19 @@
       return {
         text: '',
         input: '',
-        history: []
+        history: [],
+
+        // Hover mode (for this site only)
+        hoverMode: false,
+        currentHost: '',
+
+        // Global hover Translation setting
+        globalHoverTranslation: false
       };
     },
+
+    // Sites for which on hover translate settings are inverted.
+    hoverExclude: [],
 
     computed: {
       showTranslate () {
@@ -73,7 +97,9 @@
 
     created () {
       chrome.storage.onChanged.addListener(this.changeHistoryListener);
+      chrome.runtime.onMessage.addListener(this.onMessageListener);
 
+      this.loadOptions();
       this.loadHistory();
 
       setTimeout(this.focus, 150);
@@ -81,6 +107,7 @@
     },
 
     beforeDestroy () {
+      chrome.runtime.onMessage.removeListener(this.onMessageListener);
       chrome.storage.onChanged.removeListener(this.changeHistoryListener);
     },
 
@@ -98,9 +125,31 @@
         history.getAll().then(items => this.history = items.reverse());
       },
 
+      loadOptions () {
+        options.getAllOptions().then(values => {
+          this.globalHoverTranslation = values.hoverTranslation;
+          this.$options.hoverExclude = Array.isArray(values.hoverExclude) ? values.hoverExclude : [];
+
+          // Request URL of the current active tab
+          chrome.runtime.sendMessage({ id: BACKGROUND_GET_CURRENT_HOST });
+        });
+      },
+
       changeHistoryListener (changes, area) {
         if (changes.history && area === 'local') {
           this.loadHistory();
+        }
+      },
+
+      onMessageListener (message) {
+        if (message.id === BROWSER_ACTION_CURRENT_HOST) {
+
+          // Set hoverMode to globalHoverTranslation setting or invert it if this site is excluded
+          this.hoverMode = this.$options.hoverExclude.indexOf(message.host) >= 0
+            ? !this.globalHoverTranslation
+            : this.globalHoverTranslation;
+
+          this.currentHost = message.host;
         }
       },
 
@@ -118,6 +167,28 @@
 
       openOptionsPage () {
         chrome.runtime.openOptionsPage();
+      },
+
+      toggleHoverMode () {
+        if (this.currentHost !== '') {
+          this.hoverMode = !this.hoverMode;
+
+          if (this.hoverMode) {
+            this.$options.hoverExclude.push(this.currentHost);
+          } else {
+            const index = this.$options.hoverExclude.indexOf(this.currentHost);
+
+            if (index !== -1) {
+              this.$options.hoverExclude.splice(index, 1);
+            }
+          }
+
+          options.setAllOptions({ hoverExclude: this.$options.hoverExclude })
+            .then(() => {
+              this.loadOptions();
+              chrome.runtime.sendMessage({ id: PROXY_ALL_CONTENT_REFRESH_OPTIONS });
+            });
+        }
       },
 
       search: debounce(function () {

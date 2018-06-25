@@ -5,22 +5,39 @@ import {
   PROXY_CONTENT_MOUSE,
   PROXY_CONTENT_OPEN_POPUP,
   PROXY_CONTENT_CLOSE_POPUP,
-  PROXY_CONTENT_REFRESH_POPUP
+  PROXY_CONTENT_REFRESH_POPUP,
+  PROXY_ALL_CONTENT_REFRESH_OPTIONS
 } from '../messages'
 
 let options = {};
 
+// Is this host excluded from global hover translation settings?
+let hostExcluded = false;
+
 // Fetch options from local storage
-optionsStorage.getAllOptions().then(data => {
+optionsStorage.getAllOptions().then(onGetAllOptionsListener);
+
+document.body.addEventListener('mousedown', onMousedownListener);
+document.body.addEventListener('dblclick', onDblclickListener);
+
+chrome.runtime.onMessage.addListener(onRuntimeMessageEventListener);
+
+
+// Event Listeners
+
+function onGetAllOptionsListener (data) {
   options = data;
+  hostExcluded = Array.isArray(options.hoverExclude) && options.hoverExclude.indexOf(window.location.host) !== -1;
 
   // Add Translate on MouseOver handler
-  if (options.hoverTranslation) {
-    document.body.addEventListener('mousemove', onHoverTranslationHandler);
+  if (options.hoverTranslation && !hostExcluded || !options.hoverTranslation && hostExcluded) {
+    document.body.addEventListener('mousemove', onHoverTranslationListener);
+  } else {
+    document.body.removeEventListener('mousemove', onHoverTranslationListener);
   }
-});
+}
 
-document.body.addEventListener('mousedown', function (e) {
+function onMousedownListener (e) {
   // If left button clicked, close popup
   if (e.button === 0) {
     closePopup();
@@ -34,9 +51,9 @@ document.body.addEventListener('mousedown', function (e) {
       y: e.clientY
     });
   }
-});
+}
 
-document.body.addEventListener('dblclick', function (e) {
+function onDblclickListener (e) {
   // Do nothing if dblclick handling is disabled.
   if (! options.doubleClick) {
     return;
@@ -52,13 +69,34 @@ document.body.addEventListener('dblclick', function (e) {
   }
 
   captureSelection();
-});
+}
 
-chrome.runtime.onMessage.addListener(function (message) {
+function onRuntimeMessageEventListener (message) {
   if (message.id === PROXY_CONTENT_REFRESH_POPUP && message.frameIndex === getSelfFrameIndex()) {
     captureSelection();
+  } else if (message.id === PROXY_ALL_CONTENT_REFRESH_OPTIONS) {
+    // Reload options
+    optionsStorage.getAllOptions().then(onGetAllOptionsListener);
   }
-});
+}
+
+let onHoverTranslationTimer;
+
+function onHoverTranslationListener (e) {
+  clearTimeout(onHoverTranslationTimer);
+
+  onHoverTranslationTimer = setTimeout(function () {
+    const range = getWordFromCaretPosition(document.caretPositionFromPoint(e.x, e.y), e.x, e.y);
+    const text = range !== null ? range.toString() : null;
+
+    if (text !== null && text.length > 0) {
+      openPopup(text, range);
+    }
+  }, options.hoverTimeout);
+}
+
+
+// Helpers
 
 function captureSelection () {
   const selection = window.getSelection();
@@ -131,19 +169,4 @@ function getSelfFrameIndex () {
   }
 
   return index;
-}
-
-let onHoverTranslationTimer;
-
-function onHoverTranslationHandler (e) {
-  clearTimeout(onHoverTranslationTimer);
-
-  onHoverTranslationTimer = setTimeout(function () {
-    const range = getWordFromCaretPosition(document.caretPositionFromPoint(e.x, e.y), e.x, e.y);
-    const text = range !== null ? range.toString() : null;
-
-    if (text !== null && text.length > 0) {
-      openPopup(text, range);
-    }
-  }, options.hoverTimeout);
 }
