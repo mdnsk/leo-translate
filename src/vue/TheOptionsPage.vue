@@ -59,7 +59,31 @@
           :checked="options.hoverTranslation"
           @change="onHoverTranslationChanged"
         >
-        <label for="hoverTranslation">Enable on hover translation for all sites</label>
+        <label for="hoverTranslation">Enable on hover translation for all sites.</label>
+      </div>
+      <div class="dependent-option browser-style">
+        <input
+          id="hoverAlt"
+          type="checkbox"
+          v-model="options.hoverAlt"
+        >
+        <label for="hoverAlt">Only with Alt key.</label>
+      </div>
+      <div class="dependent-option browser-style">
+        <input
+          id="hoverCtrl"
+          type="checkbox"
+          v-model="options.hoverCtrl"
+        >
+        <label for="hoverCtrl">Only with Ctrl key.</label>
+      </div>
+      <div class="dependent-option browser-style">
+        <input
+          id="hoverShift"
+          type="checkbox"
+          v-model="options.hoverShift"
+        >
+        <label for="hoverShift">Only with Shift key.</label>
       </div>
       <label>
         Timeout (ms)<br>
@@ -106,6 +130,9 @@
           doubleClickMeta:  null,
           hoverTranslation: null,
           hoverTimeout:     null,
+          hoverAlt:         null,
+          hoverCtrl:        null,
+          hoverShift:       null,
           theme:            null,
           audioAutoPlay:    null
         },

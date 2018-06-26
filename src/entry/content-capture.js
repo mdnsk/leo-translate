@@ -31,9 +31,17 @@ function onGetAllOptionsAndHoverExcludedListener ([ newOptions, excludedHosts ])
 
   // Add Translate on MouseOver handler
   if (options.hoverTranslation && !hostExcluded || !options.hoverTranslation && hostExcluded) {
-    document.body.addEventListener('mousemove', onHoverTranslationListener);
+    if (options.hoverAlt || options.hoverCtrl || options.hoverShift) {
+      document.body.removeEventListener('mousemove', onHoverTranslationListener);
+      document.body.addEventListener('keydown', onKeyDownListener);
+      document.body.addEventListener('keyup', onKeyUpListener);
+    } else {
+      document.body.addEventListener('mousemove', onHoverTranslationListener);
+    }
   } else {
     document.body.removeEventListener('mousemove', onHoverTranslationListener);
+    document.body.removeEventListener('keydown', onKeyDownListener);
+    document.body.removeEventListener('keyup', onKeyUpListener);
   }
 }
 
@@ -95,6 +103,16 @@ function onHoverTranslationListener (e) {
   }, options.hoverTimeout);
 }
 
+function onKeyDownListener (e) {
+  if (isAltHover(e) || isCtrlHover(e) || isShiftHover(e)) {
+    document.body.addEventListener('mousemove', onHoverTranslationListener);
+  }
+}
+
+function onKeyUpListener () {
+  document.body.removeEventListener('mousemove', onHoverTranslationListener);
+}
+
 
 // Helpers
 
@@ -147,6 +165,18 @@ function isCtrlClick (e) {
 
 function isCmdClick (e) {
   return options.doubleClickMeta && e.metaKey;
+}
+
+function isAltHover (e) {
+  return options.hoverAlt && e.key === 'Alt';
+}
+
+function isCtrlHover (e) {
+  return options.hoverCtrl && e.key === 'Control';
+}
+
+function isShiftHover (e) {
+  return options.hoverShift && e.key === 'Shift';
 }
 
 function containsAnyEnglishLetter (text) {

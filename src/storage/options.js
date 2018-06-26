@@ -12,6 +12,9 @@ export const defaultValues = Object.freeze({
   // Enable hover translation for all sites
   hoverTranslation: false,
   hoverTimeout:     300,
+  hoverAlt:         true,
+  hoverCtrl:        false,
+  hoverShift:       false,
 
   // Theme (css files)
   theme:            'blackberry',
