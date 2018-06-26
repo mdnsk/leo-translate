@@ -31,17 +31,9 @@ function onGetAllOptionsAndHoverExcludedListener ([ newOptions, excludedHosts ])
 
   // Add Translate on MouseOver handler
   if (options.hoverTranslation && !hostExcluded || !options.hoverTranslation && hostExcluded) {
-    if (options.hoverAlt || options.hoverCtrl || options.hoverShift) {
-      document.body.removeEventListener('mousemove', onHoverTranslationListener);
-      document.body.addEventListener('keydown', onKeyDownListener);
-      document.body.addEventListener('keyup', onKeyUpListener);
-    } else {
-      document.body.addEventListener('mousemove', onHoverTranslationListener);
-    }
+    document.body.addEventListener('mousemove', onHoverTranslationListener);
   } else {
     document.body.removeEventListener('mousemove', onHoverTranslationListener);
-    document.body.removeEventListener('keydown', onKeyDownListener);
-    document.body.removeEventListener('keyup', onKeyUpListener);
   }
 }
 
@@ -94,6 +86,11 @@ function onHoverTranslationListener (e) {
   clearTimeout(onHoverTranslationTimer);
 
   onHoverTranslationTimer = setTimeout(function () {
+    if ((options.hoverAlt || options.hoverCtrl || options.hoverShift)
+      && ! (isAltHover(e) || isCtrlHover(e) || isShiftHover(e))) {
+      return;
+    }
+
     const range = getWordFromCaretPosition(document.caretPositionFromPoint(e.x, e.y), e.x, e.y);
     const text = range !== null ? range.toString() : null;
 
@@ -101,16 +98,6 @@ function onHoverTranslationListener (e) {
       openPopup(text, range);
     }
   }, options.hoverTimeout);
-}
-
-function onKeyDownListener (e) {
-  if (isAltHover(e) || isCtrlHover(e) || isShiftHover(e)) {
-    document.body.addEventListener('mousemove', onHoverTranslationListener);
-  }
-}
-
-function onKeyUpListener () {
-  document.body.removeEventListener('mousemove', onHoverTranslationListener);
 }
 
 
@@ -168,15 +155,15 @@ function isCmdClick (e) {
 }
 
 function isAltHover (e) {
-  return options.hoverAlt && e.key === 'Alt';
+  return options.hoverAlt && e.altKey;
 }
 
 function isCtrlHover (e) {
-  return options.hoverCtrl && e.key === 'Control';
+  return options.hoverCtrl && e.ctrlKey;
 }
 
 function isShiftHover (e) {
-  return options.hoverShift && e.key === 'Shift';
+  return options.hoverShift && e.shiftKey;
 }
 
 function containsAnyEnglishLetter (text) {
