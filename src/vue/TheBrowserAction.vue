@@ -171,7 +171,7 @@
       },
 
       toggleHoverMode () {
-        if (this.currentHost !== '') {
+        if (this.currentHost !== '' && this.currentHost !== null) {
           const index = this.hoverExcluded.indexOf(this.currentHost);
 
           if (index === -1) {
