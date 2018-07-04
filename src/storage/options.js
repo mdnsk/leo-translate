@@ -47,10 +47,8 @@ export default {
       chrome.storage.local.get({ options: {}}, data => {
         const options = {};
 
-        for (const key in defaultValues) {
-            if (defaultValues.hasOwnProperty(key)) {
-                options[key] = getOptionValue(typeof data === 'object' ? data.options : {}, key);
-            }
+        for (const key of Object.keys(defaultValues)) {
+          options[key] = getOptionValue(typeof data === 'object' ? data.options : {}, key);
         }
 
         return resolve(options);
