@@ -15,8 +15,8 @@ let options = {};
 // Fetch options and sites excluded from global hover translation settings from local storage
 loadOptionsAndHoverExcluded();
 
-document.body.addEventListener('mousedown', onMousedownListener);
-document.body.addEventListener('dblclick', onDblclickListener);
+document.documentElement.addEventListener('mousedown', onMousedownListener);
+document.documentElement.addEventListener('dblclick', onDblclickListener);
 
 chrome.runtime.onMessage.addListener(onRuntimeMessageEventListener);
 
