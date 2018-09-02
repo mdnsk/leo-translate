@@ -3,9 +3,10 @@ export function removeHtmlTags (text) {
 }
 
 export function getBodyOffset () {
+  const bodyPosition = window.getComputedStyle(document.body).getPropertyValue('position');
+
   // Do not return offset if the body element doesn't have any position.
-  if (document.body.style.position === 'static' ||
-      document.body.style.position === '') {
+  if (bodyPosition === 'static' || bodyPosition === '') {
     return { top: 0, left: 0 };
   }
 
