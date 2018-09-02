@@ -19,6 +19,7 @@
 
 <script>
   import api from '../leoApi';
+  import options from '../storage/options';
 
   export default {
     props: {
@@ -36,6 +37,8 @@
       context () {
         this.translatedContext = '';
         this.showTranslatedContext = false;
+
+        options.getOption('contextAutoTranslate').then(val => val && this.toggleTranslatedContext());
       }
     },
 

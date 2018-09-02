@@ -7,10 +7,20 @@
       <div class="browser-style">
         <input
             id="contextCapturing"
-            v-model="options.contextCapturing"
             type="checkbox"
+            :checked="options.contextCapturing"
+            @change="onContextCapturingChanged"
         >
         <label for="contextCapturing">Enable Context Capturing</label>
+      </div>
+      <div class="dependent-option browser-style">
+        <input
+            id="contextAutoTranslate"
+            type="checkbox"
+            v-model="options.contextAutoTranslate"
+            :disabled="!options.contextCapturing"
+        >
+        <label for="contextAutoTranslate">Translate Context Automatically.</label>
       </div>
 
       <h3>Double Click Translation</h3>
@@ -123,18 +133,19 @@
     data () {
       return {
         options: {
-          contextCapturing: null,
-          doubleClick:      null,
-          doubleClickCtrl:  null,
-          doubleClickAlt:   null,
-          doubleClickMeta:  null,
-          hoverTranslation: null,
-          hoverTimeout:     null,
-          hoverAlt:         null,
-          hoverCtrl:        null,
-          hoverShift:       null,
-          theme:            null,
-          audioAutoPlay:    null
+          contextCapturing:     null,
+          doubleClick:          null,
+          doubleClickCtrl:      null,
+          doubleClickAlt:       null,
+          doubleClickMeta:      null,
+          hoverTranslation:     null,
+          hoverTimeout:         null,
+          hoverAlt:             null,
+          hoverCtrl:            null,
+          hoverShift:           null,
+          theme:                null,
+          audioAutoPlay:        null,
+          contextAutoTranslate: null
         },
       };
     },
@@ -168,6 +179,18 @@
 
       loadOptions () {
         options.getAllOptions().then(options => this.options = options);
+      },
+
+      onContextCapturingChanged (e) {
+        const values = {
+          contextCapturing: e.target.checked
+        };
+
+        if (! e.target.checked) {
+          values['contextAutoTranslate'] = false;
+        }
+
+        this.options = Object.assign({}, this.options, values);
       },
 
       // Set dependent options to false

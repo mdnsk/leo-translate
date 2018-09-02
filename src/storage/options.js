@@ -2,6 +2,7 @@
 export const defaultValues = Object.freeze({
   // Enable context capturing
   contextCapturing: false,
+  contextAutoTranslate: false,
 
   // Double Click Translation settings
   doubleClick:      true,
