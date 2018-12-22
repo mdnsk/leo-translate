@@ -217,9 +217,9 @@
   };
 </script>
 
-<style>
-  label {
-    display: block;
+<style scoped>
+  select {
+    margin-top: 8px;
   }
 
   .dependent-option {
