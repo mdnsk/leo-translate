@@ -12,9 +12,9 @@
     "web-ext:lint": "web-ext lint --source-dir ./extension/"
   },
   "dependencies": {
-    "debounce": "^1.1.0",
-    "epic-spinners": "^1.0.3",
-    "vue": "^2.5.16"
+    "debounce": "^1.2.0",
+    "epic-spinners": "^1.0.4",
+    "vue": "^2.5.21"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -23,12 +23,12 @@
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.11.0",
     "sass-loader": "^6.0.7",
     "vue-loader": "^12.1.0",
-    "vue-template-compiler": "^2.5.16",
-    "web-ext": "^2.7.0",
+    "vue-template-compiler": "^2.5.21",
+    "web-ext": "^2.9.3",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.11.2"
+    "webpack-dev-server": "^2.11.3"
   }
 }
