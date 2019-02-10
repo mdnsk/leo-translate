@@ -9,13 +9,13 @@
         @refresh="$emit('refresh')"
     />
     <div
-        v-if="isListLoading"
+        v-if="!translations.length"
         class="translate__loading"
     >
       Loading...
     </div>
     <div
-        v-else-if="errorMessage !== ''"
+        v-if="errorMessage !== '' && !isListLoading"
         class="translate__error"
     >
       {{ errorMessage }}
@@ -39,7 +39,7 @@
       </div>
       <TranslateList
           :translations="translations"
-          :is-meaning-adding="isMeaningAdding"
+          :is-loading="isMeaningAdding || isListLoading"
           @add-meaning="onAddMeaningListener"
       />
     </div>
@@ -126,8 +126,10 @@
         }
       },
 
-      isListLoading () {
-        this.$emit('resize');
+      isListLoading (isLoading) {
+        if (!isLoading) {
+          this.$emit('resize');
+        }
       }
     },
 

@@ -23,7 +23,7 @@
     >
 
     <div
-        v-if="isMeaningAdding"
+        v-if="isLoading"
         class="translate-list__overlay"
     >
       <HollowDotsSpinner
@@ -49,7 +49,7 @@
         type: Array,
         required: true
       },
-      isMeaningAdding: {
+      isLoading: {
         type: Boolean,
         required: true
       }
