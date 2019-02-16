@@ -2,10 +2,10 @@
   <div class="translate-header">
     <div class="translate-header__controls">
       <button
-              v-if="showRefresh"
-              class="translate-header__btn translate-header__btn-refresh"
-              title="Refresh"
-              @click="$emit('refresh')"
+          v-if="showRefresh"
+          class="translate-header__btn translate-header__btn-refresh"
+          title="Refresh"
+          @click="$emit('refresh')"
       >
         Refresh
       </button>

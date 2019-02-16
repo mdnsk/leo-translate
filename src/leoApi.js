@@ -32,7 +32,7 @@ export default {
     });
 
     return fetch(
-        config.api+config.addWordToDictionary+'?port=1001',
+        `${config.api}${config.addWordToDictionary}?port=1001`,
         { body, method: 'POST', credentials: 'same-origin' }
       )
       .then(returnJsonIfOk);
@@ -52,7 +52,7 @@ export default {
     });
 
     return fetch(
-        config.api+config.getTranslations+'?port=1001',
+        `${config.api}${config.getTranslations}?port=1001`,
         { body, method: 'POST' }
       )
       .then(returnJsonIfOk);
@@ -80,7 +80,7 @@ export default {
     const body = encodeParams({ q, source, target });
 
     return fetch(
-        config.api+config.translateFromRussian+'?'+body,
+        `${config.api}${config.translateFromRussian}?${body}`,
         { method: 'GET' }
       )
       .then(returnJsonIfOk);

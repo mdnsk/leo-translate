@@ -153,10 +153,10 @@
             let notification = '';
 
             if (data.error_msg === '') {
-              notification = 'The "'+this.text+'" word has been added!';
+              notification = `The "${this.text}" word has been added!`;
               history.addWord(this.text, translation, this.soundUrl);
             } else {
-              notification = 'An error message received: '+data.error_msg;
+              notification = `An error message received: ${data.error_msg}`;
             }
 
             chrome.runtime.sendMessage({

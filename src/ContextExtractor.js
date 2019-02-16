@@ -120,7 +120,7 @@ export default class Extractor {
     };
 
     if ([Extractor.BACKWARD_DIRECTION, Extractor.FORWARD_DIRECTION].indexOf(direction) === -1) {
-      throw new Error('Invalid direction "'+direction+'"');
+      throw new Error(`Invalid direction "${direction}"`);
     }
 
     if (Extractor.isBlock(el) || el.nodeName.toLowerCase() === 'br') {

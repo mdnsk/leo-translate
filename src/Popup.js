@@ -14,7 +14,7 @@ export default class Popup {
       border: 'none',
       zIndex: 10000000000,
       boxShadow: '0 0 4px 0',
-      width: this.WIDTH+'px',
+      width: `${this.WIDTH}px`,
       height: '67px',
       padding: 0,
       margin: 0
@@ -59,7 +59,7 @@ export default class Popup {
   refreshHeight (height) {
     const popup = this.createPopup();
 
-    popup.style.height = height+'px';
+    popup.style.height = `${height}px`;
 
     return this;
   }
@@ -96,8 +96,8 @@ export default class Popup {
       ? top - popupHeight
       : bottom + this.MARGIN_Y;
 
-    this.popup.style.top = y+'px';
-    this.popup.style.left = x+'px';
+    this.popup.style.top = `${y}px`;
+    this.popup.style.left = `${x}px`;
 
     return this;
   }

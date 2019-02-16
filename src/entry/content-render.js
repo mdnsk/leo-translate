@@ -118,7 +118,7 @@ function checkSelectionLength (text) {
   if (text.length > maxLength) {
     chrome.runtime.sendMessage({
       id: BACKGROUND_SHOW_NOTIFICATION,
-      text: 'The selection is too long! It must be less than '+maxLength+' characters.'
+      text: `The selection is too long! It must be less than ${maxLength} characters.`
     });
 
     return false;
