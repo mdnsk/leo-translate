@@ -60,7 +60,11 @@
         let max = 0;
         let min = 0;
 
-        this.translations.forEach(item => {
+        const translations = this.translations.map(item => {
+          return typeof item.votes === 'undefined' ? Object.assign({}, item, { votes: item.vt }) : item;
+        });
+
+        translations.forEach(item => {
           if (item.votes > max) {
             max = item.votes;
           }
@@ -69,7 +73,7 @@
           }
         });
 
-        return this.translations.map(item => {
+        return translations.map(item => {
           item.rating = (max === 0 && min === 0 || min >= max) ? 0 : 100 / (max - min) * (item.votes - min);
 
           return item;
