@@ -1,0 +1,47 @@
+@import '../mixins';
+@import '../blackberry/browser-action';
+
+.the-browser-action {
+  background: #999;
+}
+
+.the-browser-action__search {
+  background: #999;
+  border: none;
+  box-shadow: inset 0 -2px #436b95, inset 0 0 #999;
+
+  &:focus {
+    border: none;
+    box-shadow: inset 2px 2px #436b95, inset -2px -2px #436b95;
+  }
+}
+
+.the-browser-action__clear-search {
+  &:hover, &:focus {
+    @include svg-mask('#{$theme-path}blackberry-cross.svg', #436b95);
+  }
+}
+
+.the-browser-action__hover-mode-checkbox {
+  color: #ccc;
+
+  &.the-browser-action__hover-mode-checkbox_active {
+    color: #436b95;
+  }
+}
+
+.the-browser-action__history-link {
+  color: #436b95;
+
+  span {
+    border-bottom-color: #ccc;
+  }
+
+  &:hover span {
+    border-bottom-color: #436b95;
+  }
+}
+
+.the-browser-action__history-meanings {
+  color: #999;
+}

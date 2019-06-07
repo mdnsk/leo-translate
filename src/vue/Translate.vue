@@ -238,4 +238,9 @@
     @import "../assets/themes/blackberry/style.scss";
     @import "../assets/themes/blackberry/popup.scss";
   }
+
+  .theme-blueberry {
+    @import "../assets/themes/blueberry/style.scss";
+    @import "../assets/themes/blueberry/popup.scss";
+  }
 </style>

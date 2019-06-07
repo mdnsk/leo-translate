@@ -108,6 +108,7 @@
         <select class="browser-style" v-model="options.theme">
           <option value="leo-translate">LeoTranslate</option>
           <option value="blackberry">Blackberry</option>
+          <option value="blueberry">Blueberry</option>
         </select>
       </label>
 

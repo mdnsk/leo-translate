@@ -208,4 +208,9 @@
     @import "../assets/themes/blackberry/style.scss";
     @import "../assets/themes/blackberry/browser-action.scss";
   }
+
+  .theme-blueberry {
+    @import "../assets/themes/blueberry/style.scss";
+    @import "../assets/themes/blueberry/browser-action.scss";
+  }
 </style>
