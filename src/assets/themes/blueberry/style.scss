@@ -1,0 +1,21 @@
+@import '../blackberry/style';
+
+.btn {
+  border-color: #436b95;
+  color: #436b95;
+
+  &:hover {
+    background: #436b95;
+    color: #ccc;
+  }
+
+  &:disabled {
+    background: #999;
+    color: #ccc;
+    border-color: #ccc;
+  }
+}
+
+.button-link {
+  color: #436b95;
+}
