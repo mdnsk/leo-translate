@@ -53,7 +53,7 @@ export default {
 
     return fetch(
         `${config.api}${config.getTranslations}?port=1001`,
-        { body, method: 'POST' }
+        { body, method: 'POST', credentials: 'omit' }
       )
       .then(returnJsonIfOk);
   },
