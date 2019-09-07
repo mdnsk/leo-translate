@@ -96,7 +96,10 @@ function onHoverTranslationListener (e) {
 
     if (text !== null && text.length > 0) {
       openPopup(text, range);
-    }
+    } else {
+	  // Hide tooltip when mouse moved to area without any text
+	  closePopup();
+	}
   }, options.hoverTimeout);
 }
 
