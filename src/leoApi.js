@@ -81,7 +81,7 @@ export default {
 
     return fetch(
         `${config.api}${config.translateFromRussian}?${body}`,
-        { method: 'GET' }
+        { method: 'GET', credentials: 'omit' }
       )
       .then(returnJsonIfOk);
   }
