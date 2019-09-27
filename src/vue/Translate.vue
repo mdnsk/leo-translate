@@ -9,13 +9,23 @@
         @refresh="$emit('refresh')"
     />
     <div
-        v-if="!translations.length"
+        v-if="!translations.length && errorMessage === ''"
         class="translate__loading"
     >
       Loading...
     </div>
     <div
-        v-if="errorMessage !== '' && !isListLoading"
+      v-if="errorMessage === 'Target language not found' && !isListLoading"
+      class="translate__error"
+    >
+      <strong>Ошибка</strong>
+      <p>
+        Пожалуйста, авторизуйтесь на сайте
+        <a href="https://lingualeo.com" target="_blank">lingualeo.com</a>
+      </p>
+    </div>
+    <div
+        v-else-if="errorMessage !== '' && !isListLoading"
         class="translate__error"
     >
       {{ errorMessage }}
