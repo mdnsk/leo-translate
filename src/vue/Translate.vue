@@ -162,7 +162,7 @@
           .then(data => {
             let notification = '';
 
-            if (data.error_msg === '') {
+            if (Object.keys(data).length === 0 || data.error_msg === '') {
               notification = `The "${this.text}" word has been added!`;
               history.addWord(this.text, translation, this.soundUrl);
             } else {
