@@ -1,7 +1,7 @@
 {
   "name": "leo-translate",
   "description": "The Vue components of the extension",
-  "version": "1.0.0",
+  "version": "1.17.7",
   "author": "Mikhail <m.donsk@ya.ru>",
   "private": true,
   "scripts": {
