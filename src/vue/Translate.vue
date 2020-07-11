@@ -181,7 +181,7 @@
       fetchTranslation () {
         this.isListLoading = true;
         api.getTranslations(this.text).then(data => {
-          if (data.error_msg === '') {
+          if (!data.error_msg) {
             this.translations = data.translate;
             this.soundUrl = data.sound_url;
             this.transcription = data.transcription;
