@@ -1,7 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
+  mode: process.env.NODE_ENV,
+
   entry: {
     'vendor': ['vue', 'debounce'],
     'background': './src/entry/background.js',
@@ -20,20 +23,22 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-            // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
-            // the "scss" and "sass" values for the lang attribute to the right configs here.
-            // other preprocessors should work out of the box, no loader config like this necessary.
-            'scss': [
-              'vue-style-loader',
-              'css-loader',
-              'sass-loader'
-            ]
-          }
-          // other vue-loader options go here
-        }
+        loader: 'vue-loader'
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ],
       },
       {
         test: /\.js$/,
@@ -61,33 +66,19 @@ module.exports = {
   performance: {
     hints: false
   },
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity
-    })
-  ],
   node: {
     global: false,
     setImmediate: false
-  }
+  },
+  plugins: [
+    new VueLoaderPlugin()
+  ]
 };
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = false;
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   sourceMap: true,
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
