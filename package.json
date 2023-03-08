@@ -23,12 +23,12 @@
     "cross-env": "3.0.0",
     "css-loader": "0.25.0",
     "file-loader": "0.9.0",
-    "node-sass": "4.11.0",
+    "node-sass": "8.0.0",
     "sass-loader": "6.0.7",
     "vue-loader": "12.1.0",
     "vue-template-compiler": "2.5.22",
     "web-ext": "4.3.0",
-    "webpack": "2.6.1",
+    "webpack": "3.12.0",
     "webpack-dev-server": "2.11.5"
   }
 }
