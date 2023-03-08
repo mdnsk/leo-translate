@@ -17,7 +17,9 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './extension/dist'),
-    filename: '[name].js'
+    filename: '[name].js',
+    assetModuleFilename: '../dist/[name][ext]?[contenthash]',
+    clean: true,
   },
   module: {
     rules: [
@@ -47,10 +49,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file-loader',
-        options: {
-          name: '../dist/[name].[ext]?[hash]'
-        }
+        type: 'asset/resource'
       }
     ]
   },
@@ -61,10 +60,6 @@ module.exports = {
   },
   performance: {
     hints: false
-  },
-  node: {
-    global: false,
-    setImmediate: false
   },
   plugins: [
     new VueLoaderPlugin()
