@@ -9,7 +9,6 @@
     <translate
         v-show="showTranslate"
         :text="text"
-        page-url=""
         class="the-browser-action__translate"
         @close="close"
         @translate="translate"

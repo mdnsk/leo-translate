@@ -81,7 +81,6 @@
 
     props: {
       text: String,
-      pageUrl: String,
       context: {
         type: String,
         default: ''
