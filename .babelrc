@@ -1,6 +1,6 @@
 {
   "presets": [
-    ["env", {
+    ["@babel/preset-env", {
       "modules": false,
       "targets": {
         "browsers": ["Firefox > 54", "last 2 Chrome versions"]

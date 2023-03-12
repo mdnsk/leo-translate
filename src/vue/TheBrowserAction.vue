@@ -9,8 +9,6 @@
     <translate
         v-show="showTranslate"
         :text="text"
-        page-url=""
-        page-title="From LeoTranslator browser extension"
         class="the-browser-action__translate"
         @close="close"
         @translate="translate"

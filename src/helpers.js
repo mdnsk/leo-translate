@@ -38,3 +38,15 @@ export function extractHostname (url) {
 
   return hostname;
 }
+
+/**
+ *
+ * @param response
+ */
+export function returnJsonIfOk(response) {
+  if (response.ok) {
+    return response.json();
+  }
+
+  throw new Error('Invalid response.');
+}

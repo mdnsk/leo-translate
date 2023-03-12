@@ -1,34 +1,33 @@
 {
   "name": "leo-translate",
   "description": "The Vue components of the extension",
-  "version": "1.17.7",
+  "version": "1.18.0",
   "author": "Mikhail <m.donsk@ya.ru>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack --watch --progress",
+    "build": "cross-env NODE_ENV=production webpack --progress",
     "web-ext:run": "web-ext run --source-dir ./extension/",
     "web-ext:build": "web-ext build --source-dir ./extension/ --artifactsDir ./extension/web-ext-artifacts/",
     "web-ext:lint": "web-ext lint --source-dir ./extension/"
   },
   "dependencies": {
-    "debounce": "^1.2.0",
-    "epic-spinners": "^1.0.4",
-    "vue": "^2.5.22"
+    "debounce": "1.2.0",
+    "epic-spinners": "1.0.4",
+    "vue": "2.5.22"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^6.0.0",
-    "babel-preset-env": "^1.7.0",
-    "cross-env": "^3.0.0",
-    "css-loader": "^0.25.0",
-    "file-loader": "^0.9.0",
-    "node-sass": "^4.11.0",
-    "sass-loader": "^6.0.7",
-    "vue-loader": "^12.1.0",
-    "vue-template-compiler": "^2.5.22",
-    "web-ext": "^4.3.0",
-    "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.11.5"
+    "@babel/core": "7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "babel-loader": "9.1.2",
+    "cross-env": "3.0.0",
+    "css-loader": "6.7.3",
+    "sass": "1.58.3",
+    "sass-loader": "10.4.1",
+    "vue-loader": "15.10.1",
+    "vue-template-compiler": "2.5.22",
+    "web-ext": "7.5.0",
+    "webpack": "5.75.0",
+    "webpack-cli": "5.0.1"
   }
 }
