@@ -63,7 +63,6 @@
 <script>
   import api from '../leoApi';
   import history from '../storage/history';
-  import options from '../storage/options';
   import TranslateList from './TranslateList.vue';
   import TranslateHeader from './TranslateHeader.vue';
   import TranslateContext from './TranslateContext.vue';
@@ -83,7 +82,6 @@
     props: {
       text: String,
       pageUrl: String,
-      pageTitle: String,
       context: {
         type: String,
         default: ''
@@ -108,9 +106,6 @@
         // Element states
         isListLoading: true,
         isMeaningAdding: false,
-
-        // Options
-        privateMode: true,
       };
     },
 
@@ -145,8 +140,6 @@
 
     created () {
       chrome.runtime.onMessage.addListener(this.onRuntimeMessageListener);
-
-      this.loadOptions();
     },
 
     beforeDestroy () {
@@ -155,14 +148,11 @@
 
     methods: {
       addToDictionary (translation) {
-        const pageUrl = this.privateMode ? '' : this.pageUrl;
-        const pageTitle = this.privateMode ? '' : this.pageTitle;
-
-        return api.addWordToDictionary(this.text, translation, pageUrl, pageTitle, this.context)
+        return api.addWordToDictionary(this.text, translation, this.context)
           .then(data => {
             let notification = '';
 
-            if (Object.keys(data).length === 0 || data.error_msg === '') {
+            if (data?.status === 'ok') {
               notification = `The "${this.text}" word has been added!`;
               history.addWord(this.text, translation, this.soundUrl);
             } else {
@@ -203,12 +193,6 @@
         });
       },
 
-      loadOptions() {
-        options.getOption('privateMode').then(value => {
-          this.privateMode = value;
-        });
-      },
-
       translate (text) {
         this.$emit('translate', text);
       },
@@ -228,10 +212,6 @@
       onRuntimeMessageListener (message) {
         if (message.id === PROXY_CONTENT_CLOSE_POPUP) {
           this.isMeaningAdding = false;
-        }
-
-        if (message.id === PROXY_ALL_CONTENT_REFRESH_OPTIONS) {
-          this.loadOptions();
         }
       }
     }

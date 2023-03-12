@@ -15,6 +15,7 @@ export const CONTENT_OPEN_POPUP = 'content-open-popup';
 // Messages to background from anywhere
 export const BACKGROUND_GET_CURRENT_HOST = 'background-get-current-host';
 export const BACKGROUND_SHOW_NOTIFICATION = 'background-show-notification';
+export const BACKGROUND_ADD_WORD_TO_DICTIONARY = 'background-add-word-to-dictionary';
 
 // Message from background to browser action
 export const BROWSER_ACTION_CURRENT_HOST = 'browser-action-current-host';

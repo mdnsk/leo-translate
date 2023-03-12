@@ -9,9 +9,11 @@ import {
   PROXY_ALL_CONTENT_REFRESH_OPTIONS,
   BROWSER_ACTION_CURRENT_HOST,
   BACKGROUND_GET_CURRENT_HOST,
-  BACKGROUND_SHOW_NOTIFICATION
+  BACKGROUND_SHOW_NOTIFICATION,
+  BACKGROUND_ADD_WORD_TO_DICTIONARY
 } from '../messages';
-import { removeHtmlTags, extractHostname } from '../helpers';
+
+import { removeHtmlTags, extractHostname, returnJsonIfOk } from '../helpers';
 
 // Create context item
 if (chrome.contextMenus !== undefined) {
@@ -30,7 +32,7 @@ if (chrome.contextMenus !== undefined) {
 }
 
 // Listen for message to show in system notification
-chrome.runtime.onMessage.addListener(function (message, sender) {
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   // Messages that should be sent to the current tab.
   const proxyMessages = [
     PROXY_CONTENT_MOUSE,
@@ -60,6 +62,42 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
         });
       }
     });
+  } else if (message.id === BACKGROUND_ADD_WORD_TO_DICTIONARY) {
+    browser.cookies.get({
+      url: `https://api.lingualeo.com/`,
+      name: 'userid'
+    }).then(async cookie => {
+      const { word, translation, context } = message;
+
+      const body = JSON.stringify({
+        apiVersion: '1.0.1',
+        userId: cookie?.value,
+        port: '1001',
+        data: [{
+          action: 'add',
+          valueList: {
+            wordValue: word,
+            wordSetId: 3,
+            translation: {
+              tr: translation,
+              ctx: context,
+              pic: "https://contentcdn.lingualeo.com/uploads/1611_1361481210.jpg"
+            }
+          },
+        }],
+      });
+
+      const headers = { 'Content-Type': 'application/json' };
+
+      const response = await fetch(
+        `https://api.lingualeo.com/SetWords`,
+        { body, method: 'POST', credentials: 'include', headers }
+      );
+
+      sendResponse(response.ok && await response.json() || { error_msg: 'Couldn\'t add word to dictionary' });
+    });
+
+    return true;
   } else if (proxyMessages.indexOf(message.id) > -1) {
     if (sender.tab) {
       chrome.tabs.sendMessage(sender.tab.id, message);

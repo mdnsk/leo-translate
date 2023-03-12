@@ -4,7 +4,6 @@
       :text="text"
       :context="context"
       :page-url="url"
-      :page-title="title"
       :in-frame="true"
       @close="close"
       @refresh="refresh"
@@ -30,7 +29,6 @@
         // Data
         url: '',
         text: '',
-        title: '',
         context: '',
         frameIndex: -1
       };
@@ -77,7 +75,6 @@
         if (message.data.id === 'content-data') {
           this.url = message.data.url;
           this.text = message.data.text;
-          this.title = message.data.title;
           this.context = message.data.context;
           this.frameIndex = message.data.frameIndex;
 

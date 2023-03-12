@@ -76,6 +76,7 @@
     "activeTab",
     "notifications",
     "storage",
+    "cookies",
     "*://api.lingualeo.com/*"
   ],
 

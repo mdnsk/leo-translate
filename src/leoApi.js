@@ -1,3 +1,6 @@
+import { BACKGROUND_ADD_WORD_TO_DICTIONARY } from './messages';
+import { returnJsonIfOk } from './helpers';
+
 const config = {
   api: 'https://api.lingualeo.com',
   url: 'https://lingualeo.com',
@@ -17,25 +20,11 @@ export default {
    *
    * @param word
    * @param translation
-   * @param pageUrl
-   * @param pageTitle
    * @param context
    * @returns {Promise}
    */
-  addWordToDictionary (word, translation, pageUrl, pageTitle, context = '') {
-    const body = encodeParams({
-      word,
-      context,
-      tword: translation,
-      context_url: pageUrl,
-      context_title: pageTitle
-    });
-
-    return fetch(
-        `${config.api}${config.addWordToDictionary}?port=1001`,
-        { body, method: 'POST', credentials: 'same-origin' }
-      )
-      .then(returnJsonIfOk);
+  addWordToDictionary (word, translation, context = '') {
+    return browser.runtime.sendMessage({ id: BACKGROUND_ADD_WORD_TO_DICTIONARY, word, translation, context });
   },
 
   /**
@@ -97,16 +86,4 @@ function encodeParams (paramsObj) {
   }
 
   return params;
-}
-
-/**
- *
- * @param response
- */
-function returnJsonIfOk(response) {
-  if (response.ok) {
-    return response.json();
-  }
-
-  throw new Error('Invalid response.');
 }

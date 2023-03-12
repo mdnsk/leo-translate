@@ -47,8 +47,7 @@ export default class Popup {
       text,
       context,
       frameIndex,
-      url: document.URL,
-      title: document.title
+      url: document.URL
     };
 
     this.createPopup().contentWindow.postMessage(message, chrome.extension.getURL(''));
